@@ -1,8 +1,9 @@
 ﻿  main.cpp
-F:\Projekt C++\Gra 2D\Projekt C++\main.cpp(40,36): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\main.cpp(76,36): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\main.cpp(83,46): warning C4305: 'argument': truncation from 'double' to 'float'
   Generating code
-  1 of 101 functions ( 1.0%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+  3 of 102 functions ( 2.9%) were compiled, the rest were copied from previous compilation.
+    1 functions were new in current compilation
+    4 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
-  Projekt C++.vcxproj -> F:\Projekt C++\Gra 2D\Projekt C++\Release\Projekt C++.exe
+  Projekt C++.vcxproj -> C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Release\Projekt C++.exe

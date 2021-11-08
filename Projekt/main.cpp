@@ -23,6 +23,22 @@ void Event(sf::RenderWindow& window, K::Key* Keys, bool* isMoving)
 
     }
 }
+
+void player_move(bool *isMoving, Character &ch, sf::Clock &timer)
+{
+    if (isMoving[0])
+        ch.move(timer, 0, -1, 1840, 560);
+
+    if (isMoving[1])
+        ch.move(timer, 0, 1, 0, 560);
+
+    if (isMoving[2])
+        ch.move(timer, 1, 0, 590, 595);
+
+    if (isMoving[3])
+        ch.move(timer, -1, 0, 1215, 595);
+}
+
 void startmapcol(sf::Sprite& a)
 {
     //kolizja gornej sciany
@@ -49,12 +65,13 @@ void startmapcol(sf::Sprite& a)
     if (a.getPosition().y < 225 && a.getPosition().x <= 204 && a.getPosition().x >= 204 - 3)a.setPosition(a.getPosition().x + 3, a.getPosition().y);
     if (a.getPosition().y == 225 && a.getPosition().x < 204 && a.getPosition().x < 849)a.setPosition(a.getPosition().x, a.getPosition().y + 3);
 }
+
 int main()
 {
     const int w = 1000, h = 700;
     bool isMoving[4] = { false, false, false, false };
     K::Key Keys[8] = { K::W,K::Up,K::S,K::Down,K::D,K::Right,K::A,K::Left };
-    sf::RenderWindow window(sf::VideoMode(w, h), "SFML works!");
+    sf::RenderWindow window(sf::VideoMode(w, h), "Nasza gra 2D");
 
     Character main_ch;
     main_ch.txt.loadFromFile("Textures/main_character.png");
@@ -74,17 +91,8 @@ int main()
     while (window.isOpen())
     {
         Event(window, Keys, isMoving);
-        if (isMoving[0])
-            main_ch.move(timer, 0, -1, 1840, 560);
-
-        if (isMoving[1])
-            main_ch.move(timer, 0, 1, 0, 560);
-
-        if (isMoving[2])
-            main_ch.move(timer, 1, 0, 590, 595);
-
-        if (isMoving[3])
-            main_ch.move(timer, -1, 0, 1215, 595);
+        player_move(isMoving, main_ch, timer);
+        
         startmapcol(main_ch.sprite);
         window.clear();
         window.draw(startmapbackground);
