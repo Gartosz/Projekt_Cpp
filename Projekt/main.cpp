@@ -1,104 +1,80 @@
-﻿#include <SFML/Graphics.hpp>
+#include <ctime>
+#include <stdlib.h>
 #include <iostream>
-#include "Character.h"
-
-#define K sf::Keyboard
-
-void Event(sf::RenderWindow& window, K::Key* Keys, bool* isMoving)
-{
-    sf::Event event;
-    while (window.pollEvent(event))
-    {
-
-        if (event.type == sf::Event::Closed || K::isKeyPressed(K::Escape))
-            window.close();
-
-        for (int i = 0; i < 4; i++)
-        {
-            if (K::isKeyPressed(Keys[2 * i]) || K::isKeyPressed(Keys[2 * i + 1]))
-                isMoving[i] = true;
-            else
-                isMoving[i] = false;
-        }
-
-    }
-}
-
-void player_move(bool *isMoving, Character &ch, sf::Clock &timer)
-{
-    if (isMoving[0])
-        ch.move(timer, 0, -1, 1840, 560);
-
-    if (isMoving[1])
-        ch.move(timer, 0, 1, 0, 560);
-
-    if (isMoving[2])
-        ch.move(timer, 1, 0, 590, 595);
-
-    if (isMoving[3])
-        ch.move(timer, -1, 0, 1215, 595);
-}
-
-void startmapcol(sf::Sprite& a)
-{
-    //kolizja gornej sciany
-    if (a.getPosition().y < 180)a.setPosition(a.getPosition().x, 180);
-    //kolizja dolnej sciany
-    if (a.getPosition().y > 700- 560 * 0.17)a.setPosition(a.getPosition().x, a.getPosition().y-3);
-    //kolizja lewej sciany
-    if (a.getPosition().x < 0)a.setPosition(0, a.getPosition().y);
-    //kolizja prawej sciany
-    if (a.getPosition().x >1000 - 460*0.17)a.setPosition(a.getPosition().x-3, a.getPosition().y);
-    //kolizja z komoda
-    if (a.getPosition().y < 213 && a.getPosition().y >= 180 && a.getPosition().x>=708 && a.getPosition().x <= 708+3)a.setPosition(a.getPosition().x - 3, a.getPosition().y);
-    if (a.getPosition().y == 210 && a.getPosition().x > 708 && a.getPosition().x < 849)a.setPosition(a.getPosition().x, a.getPosition().y +3);
-    //kolizja z lozkiem
-    if (a.getPosition().y < 294 && a.getPosition().y >= 213 && a.getPosition().x >=800 && a.getPosition().x <= 803) {a.setPosition(800, a.getPosition().y); }
-    if (a.getPosition().y == 294 && a.getPosition().x > 800)a.setPosition(a.getPosition().x, a.getPosition().y + 3);
-    //kolizja z biorkiem i krzeslem
-    if (a.getPosition().y >=474 && a.getPosition().x >= 770 && a.getPosition().x <=773)a.setPosition(770, a.getPosition().y); 
-    if (a.getPosition().y == 474 && a.getPosition().x > 769)a.setPosition(a.getPosition().x, a.getPosition().y - 3);
-    //kolizja z pilka
-    if (a.getPosition().y >=528 && a.getPosition().x <= 74 && a.getPosition().x>=71) {a.setPosition(74, a.getPosition().y); }
-    if (a.getPosition().y == 528 && a.getPosition().x < 74)a.setPosition(a.getPosition().x, a.getPosition().y - 3);
-    //kolizja z szafą
-    if (a.getPosition().y < 225 && a.getPosition().x <= 204 && a.getPosition().x >= 204 - 3)a.setPosition(a.getPosition().x + 3, a.getPosition().y);
-    if (a.getPosition().y == 225 && a.getPosition().x < 204 && a.getPosition().x < 849)a.setPosition(a.getPosition().x, a.getPosition().y + 3);
-}
+#include <Windows.h>
+#include <conio.h>
+#include "Window.h"
+#include "main.h"
+#include <string>
 
 int main()
 {
-    const int w = 1000, h = 700;
-    bool isMoving[4] = { false, false, false, false };
-    K::Key Keys[8] = { K::W,K::Up,K::S,K::Down,K::D,K::Right,K::A,K::Left };
-    sf::RenderWindow window(sf::VideoMode(w, h), "Nasza gra 2D");
-
-    Character main_ch;
-    main_ch.txt.loadFromFile("Textures/main_character.png");
-    main_ch.sprite.scale(0.17, 0.17);
-    main_ch.sprite.setPosition(785, 231);
-
-    sf::Texture startmap;
-    startmap.loadFromFile("Textures/floor.png");
-    sf::IntRect rect(0, 0, 228, 181);
-    sf::Sprite startmapbackground(startmap, rect);
-    startmapbackground.scale(w/228.0, h/181.0);
-
-    window.setFramerateLimit(60);
-
-    sf::Clock timer;
-
-    while (window.isOpen())
-    {
-        Event(window, Keys, isMoving);
-        player_move(isMoving, main_ch, timer);
-        
-        startmapcol(main_ch.sprite);
-        window.clear();
-        window.draw(startmapbackground);
-        window.draw(main_ch.sprite);
-        window.display();
-    }
-
+#define strzalka_up 72
+#define strzalka_down 80
+#define enter 13
+	int k[3] = { 33,0,0 }, co = 1,klawisz=0,p=0,c=0,j=0;
+	std::string opis="Gra";
+	while(p==0)
+	{
+		c = 0;
+		system("cls");
+		std::cout << "\x1b[" << k[0] << "m1. Zacznij gre\n";
+		std::cout << "\x1b[" << k[1] << "m2. Opis\n\x1b[0m";
+		std::cout << "\x1b[" << k[2] << "m3. Wyjscie\n\x1b[0m";
+		c = _getch();
+		switch (c)
+		{
+		case strzalka_up:
+			if (k[0] != 0)
+				break;
+			j--;
+			k[j+1] = 0;
+			k[j] = 33;
+			break;
+		case strzalka_down:
+			if (k[2] != 0)
+				break;
+			j++;
+			k[j-1] = 0;
+			k[j] = 33;
+			break;
+		case enter:
+			p = 1;
+			for (int i = 0; i < 3; i++)
+			{
+				if (k[i] == 33)
+					co = i + 1;
+			}
+			break;
+		default:
+			break;
+		}
+		
+	}
+	p = 0;
+	switch (co)
+	{
+	default:
+		break;
+	case 1:
+		start();
+		break;
+	case 2:
+		c = 0;
+		system("cls");
+		for (int i = 0; i < opis.length(); i++)
+		{
+			std::cout << opis[i];
+			Sleep(30);
+		}
+		c = _getch();
+		return main();
+		break;
+	case 3:
+		std::cout << "Do zobaczenia :)";
+		Sleep(2000);
+		return 0;
+		break;
+	}
     return 0;
 }

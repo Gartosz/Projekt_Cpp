@@ -1,0 +1,2 @@
+int start();
+#pragma once
