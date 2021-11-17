@@ -12,15 +12,16 @@ int main()
 #define strzalka_up 72
 #define strzalka_down 80
 #define enter 13
-	int k[3] = { 33,0,0 }, co = 1,klawisz=0,p=0,c=0,j=0;
+	int k[4] = { 33,0,0,0 }, co = 1,klawisz=0,p=0,c=0,j=0;
 	std::string opis="Gra";
 	while(p==0)
 	{
 		c = 0;
 		system("cls");
 		std::cout << "\x1b[" << k[0] << "m1. Zacznij gre\n";
-		std::cout << "\x1b[" << k[1] << "m2. Opis\n\x1b[0m";
-		std::cout << "\x1b[" << k[2] << "m3. Wyjscie\n\x1b[0m";
+		std::cout << "\x1b[" << k[1] << "m2. Kontynuuj gre\n";
+		std::cout << "\x1b[" << k[2] << "m3. Opis\n\x1b[0m";
+		std::cout << "\x1b[" << k[3] << "m4. Wyjscie\n\x1b[0m";
 		c = _getch();
 		switch (c)
 		{
@@ -32,7 +33,7 @@ int main()
 			k[j] = 33;
 			break;
 		case strzalka_down:
-			if (k[2] != 0)
+			if (k[3] != 0)
 				break;
 			j++;
 			k[j-1] = 0;
@@ -40,7 +41,7 @@ int main()
 			break;
 		case enter:
 			p = 1;
-			for (int i = 0; i < 3; i++)
+			for (int i = 0; i < 4; i++)
 			{
 				if (k[i] == 33)
 					co = i + 1;
@@ -57,9 +58,12 @@ int main()
 	default:
 		break;
 	case 1:
-		start();
+		game(1);
 		break;
 	case 2:
+		game(0);
+		break;
+	case 3:
 		c = 0;
 		system("cls");
 		for (int i = 0; i < opis.length(); i++)
@@ -70,7 +74,7 @@ int main()
 		c = _getch();
 		return main();
 		break;
-	case 3:
+	case 4:
 		std::cout << "Do zobaczenia :)";
 		Sleep(2000);
 		return 0;

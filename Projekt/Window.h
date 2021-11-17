@@ -1,2 +1,2 @@
-int start();
+int game(int new_start);
 #pragma once

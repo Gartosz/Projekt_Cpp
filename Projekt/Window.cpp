@@ -73,7 +73,92 @@ void startmapcol(sf::Sprite& a)
     if (a.getPosition().y == 225 && a.getPosition().x < 204 && a.getPosition().x < 849)a.setPosition(a.getPosition().x, a.getPosition().y + 3);
 }
 
-int start()
+int new_game(sf::RenderWindow &window, sf::Sprite const &startmapbackground, sf::Sprite const & main_ch)
+{
+    sf::RectangleShape fade(sf::Vector2f(window.getSize()));
+    fade.setFillColor(sf::Color(0, 0, 0, 255));
+
+    sf::SoundBuffer buffer;
+    if (!buffer.loadFromFile("siren.wav"))
+        return -1;
+
+    sf::Font font;
+    font.loadFromFile("Textures/BitPap.ttf");
+
+    sf::Text new_game;
+    new_game.setFont(font);
+    new_game.setPosition(150, 200);
+    new_game.setCharacterSize(40);
+    new_game.setString("Byl zwykly niedzielny poranek. \nSpisz w najlepsze, gdy nagle...");
+
+    sf::Clock timer;
+
+    sf::Sound sound;
+    sound.setVolume(10);
+    sound.setBuffer(buffer);
+
+    int i = 255;
+    bool s = false;
+    int start = 0;
+
+    while (window.isOpen())
+    {
+        window.draw(startmapbackground);
+        window.draw(main_ch);
+        window.draw(fade);
+
+        switch (start)
+        {
+        case 0:
+            window.draw(new_game);
+
+            if (timer.getElapsedTime().asSeconds() >= 4)
+            {
+                new_game.setString("Budzi Cie dzwiek syreny...");
+                start++;
+                timer.restart();
+            }
+
+            break;
+        case 1:
+                start++;
+                sound.play();
+            break;
+        case 2:
+            if (timer.getElapsedTime().asSeconds() >= 1)
+            {
+                start++;
+                timer.restart();
+            }
+            break;
+        case 3:
+            window.draw(new_game);
+
+            if (timer.getElapsedTime().asSeconds() >= 4)
+            {
+                start++;
+                s = true;
+            }
+            break;
+        default:
+            break;
+        }
+
+        if (s && i > 0)
+        {
+            fade.setFillColor(sf::Color(0, 0, 0, i));
+            if (timer.getElapsedTime().asMilliseconds() >= 20)
+                i--;
+        }
+
+        if (i == 0)
+            break;
+
+        window.display();
+    }
+}
+
+int game(int new_start)
 {
     const int w = 1000, h = 700;
     bool isMoving[4] = { false, false, false, false };
@@ -90,46 +175,19 @@ int start()
     sf::IntRect rect(0, 0, 228, 181);
     sf::Sprite startmapbackground(startmap, rect);
     startmapbackground.scale(w/228.0, h/181.0);
-    sf::RectangleShape fade(sf::Vector2f(window.getSize()));
-    fade.setFillColor(sf::Color(0,0,0,255));
-
-    sf::SoundBuffer buffer;
-    if (!buffer.loadFromFile("siren.wav"))
-        return -1;
-
-    sf::Font font;
-    font.loadFromFile("Textures/BitPap.ttf");
-
-    sf::Text new_game;
-    new_game.setFont(font);
-    new_game.setPosition(150,200);
-    new_game.setCharacterSize(40);
-    new_game.setString("Byl zwykly niedzielny poranek. \nSpisz w najlepsze, gdy nagle...");
-    
 
     sf::Clock timer;
-    sf::Clock start_timer;
-
-    sf::Sound sound;
-    sound.setVolume(10);
-    sound.setBuffer(buffer);
     
-    int i = 255;
-    bool s = false;
-    int start = 0;
-
     window.setFramerateLimit(60);
+
+    window.display();
+
+    if(new_start)
+        new_game(window,startmapbackground,main_ch.sprite);
+
 
     while (window.isOpen())
     {
-        
-        if(s && i>=0)
-        {
-            fade.setFillColor(sf::Color(0, 0, 0, i));
-            if (timer.getElapsedTime().asMilliseconds() >= 20)
-                i--;
-        }
-
         Event(window, Keys, isMoving);
         player_move(isMoving, main_ch, timer);
         
@@ -137,43 +195,6 @@ int start()
         window.clear();
         window.draw(startmapbackground);
         window.draw(main_ch.sprite);
-        window.draw(fade);
-
-        switch (start)
-        {
-        case 0:
-            window.draw(new_game);
-            
-            if (start_timer.getElapsedTime().asSeconds() >= 4)
-            {
-                new_game.setString("Budzi Cie dzwiek syreny...");
-                start++;
-                start_timer.restart();
-            }
-                
-            break;
-        case 1:
-            sound.play();
-            if (start_timer.getElapsedTime().asSeconds() >= 1)
-            {
-                start++;
-                start_timer.restart();
-            }
-            break;
-        case 2:
-            window.draw(new_game);
-            
-            if (start_timer.getElapsedTime().asSeconds() >= 4)
-            {
-                start++;
-                start_timer.restart();
-                s = true;
-            }
-            break;
-        default:
-            break;
-        }
-
         window.display();
     }
 
