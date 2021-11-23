@@ -166,7 +166,7 @@ void fight(sf::RenderWindow &window, Character &player, Character& enemy, sf::Re
     float wait_time=0.2;
     static sf::Clock t;
     static int i = 0;
-    sf::Vector2f options_positions[4] = { {100,500}, {100,600}, {400,500}, {400,600} };
+    sf::Vector2f const options_positions[4] = { {100,500}, {100,600}, {400,500}, {400,600} };
     sf::Text player_hp;
     sf::Text enemy_hp;
     sf::Text menu_text[4];
