@@ -1,14 +1,18 @@
 #include <SFML/Graphics.hpp>
 #include "Character.h"
 
-    Character::Character(int const& l, int const& t, int const& h)
+    Character::Character(character_type const &values)
     {
-        rect.left = l;
-        rect.top = t;
-        rect.width = ch_width;
-        rect.height = h;
+        rect.left = values.size[0];
+        rect.top = values.size[1];
+        rect.width = values.size[2];
+        rect.height = values.size[3];
+        txt.loadFromFile(values.txt_patch);
         sprite.setTexture(txt);
         sprite.setTextureRect(rect);
+        sprite.setScale(values.scale,values.scale);
+        Attack = values.Attack;
+        Health = values.Health;
     }
 
     void Character::move(sf::Clock& timer, double const& speed_h, double const& speed_v, const int& top, const int& height)
@@ -20,9 +24,24 @@
         if (timer.getElapsedTime().asSeconds() > 0.25)
         {
             if (frame > 3) frame = 0;
-            rect.left = frame * ch_width;
+            rect.left = frame * rect.width;
             sprite.setTextureRect(rect);
             timer.restart();
             frame++;
         }
+    }
+
+    void Character::player_move(bool* isMoving, sf::Clock& timer)
+    {
+        if (isMoving[0])
+            this->move(timer, 0, -1, 1840, 560);
+
+        if (isMoving[1])
+            this->move(timer, 0, 1, 0, 560);
+
+        if (isMoving[2])
+            this->move(timer, 1, 0, 590, 595);
+
+        if (isMoving[3])
+            this->move(timer, -1, 0, 1215, 595);
     }
