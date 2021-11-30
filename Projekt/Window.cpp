@@ -345,8 +345,12 @@ int game(int new_start)
             for (int i = 0; i < Enemies.size(); i++)
             {
                 if ((*Enemies[i]).Health == 0)
-                    Enemies.erase(Enemies.begin()+i);
-                window.draw((*Enemies[i]).sprite); 
+                {
+                    Enemies.erase(Enemies.begin() + i);
+                    i--;
+                }
+                else
+                    window.draw((*Enemies[i]).sprite); 
             }   
             fight_menu = true;
             Player.player_move(isMoving, timer);
