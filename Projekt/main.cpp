@@ -1,4 +1,4 @@
-#include <ctime>
+﻿#include <ctime>
 #include <stdlib.h>
 #include <iostream>
 #include <Windows.h>
@@ -12,9 +12,9 @@ int main()
 #define strzalka_up 72
 #define strzalka_down 80
 #define enter 13
-	int k[4] = { 33,0,0,0 }, co = 1,klawisz=0,p=0,c=0,j=0;
-	std::string opis="Gra";
-	while(p==0)
+	int k[4] = { 33,0,0,0 }, co = 1, klawisz = 0, p = 0, c = 0, j = 0;
+	std::string opis = "Gra";
+	while (p == 0)
 	{
 		c = 0;
 		system("cls");
@@ -29,14 +29,14 @@ int main()
 			if (k[0] != 0)
 				break;
 			j--;
-			k[j+1] = 0;
+			k[j + 1] = 0;
 			k[j] = 33;
 			break;
 		case strzalka_down:
 			if (k[3] != 0)
 				break;
 			j++;
-			k[j-1] = 0;
+			k[j - 1] = 0;
 			k[j] = 33;
 			break;
 		case enter:
@@ -50,7 +50,7 @@ int main()
 		default:
 			break;
 		}
-		
+
 	}
 	p = 0;
 	switch (co)
@@ -80,5 +80,5 @@ int main()
 		return 0;
 		break;
 	}
-    return 0;
+	return 0;
 }
