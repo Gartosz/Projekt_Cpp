@@ -60,7 +60,7 @@ void startmapcol(sf::Sprite& a)
     //kolizja z pilka
     if (a.getPosition().y >= 528 && a.getPosition().x <= 74 && a.getPosition().x >= 71) { a.setPosition(74, a.getPosition().y); }
     if (a.getPosition().y == 528 && a.getPosition().x < 74)a.setPosition(a.getPosition().x, a.getPosition().y - 3);
-    //kolizja z szaf¹
+    //kolizja z szafï¿½
     if (a.getPosition().y < 225 && a.getPosition().x <= 204 && a.getPosition().x >= 204 - 3)a.setPosition(a.getPosition().x + 3, a.getPosition().y);
     if (a.getPosition().y == 225 && a.getPosition().x < 204 && a.getPosition().x < 849)a.setPosition(a.getPosition().x, a.getPosition().y + 3);
     
@@ -494,8 +494,12 @@ int game(int new_start)
             for (int i = 0; i < Enemies.size(); i++)
             {
                 if ((*Enemies[i]).Health == 0)
+                {
                     Enemies.erase(Enemies.begin() + i);
-                window.draw((*Enemies[i]).sprite);
+                    i--;
+                }
+                else
+                    window.draw((*Enemies[i]).sprite); 
             }
             fight_menu = true;
             Player.player_move(isMoving, timer);
@@ -507,4 +511,3 @@ int game(int new_start)
     }
 
     return 0;
-}
