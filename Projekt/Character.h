@@ -12,9 +12,9 @@ public:
     float Attack;
     sf::Texture txt;
     sf::Sprite sprite;
-    Character(character_type const &values);
+    Character(character_type const& values);
     void player_move(bool* isMoving, sf::Clock& timer);
-    
+
 private:
     float speed = 3;
     sf::IntRect rect;
