@@ -2,30 +2,56 @@
 #include <SFML/Audio.hpp>
 #include <iostream>
 #include "Character.h"
+#include "Menus.h"
 #include "main.h"
 #include <math.h>
 #include <vector>
 
+
 #define K sf::Keyboard
 
-int Event(sf::RenderWindow& window, K::Key* Keys, bool* isMoving, bool& choose)
+void Event(sf::RenderWindow& window, K::Key* Keys, bool* isMoving, bool& choose, bool& menu_open, bool& menu)
 {
     sf::Event event;
+    static bool escape_release = true;
+    static bool enter_release = true;
     while (window.pollEvent(event))
     {
 
-        if (event.type == sf::Event::Closed || K::isKeyPressed(K::Escape))
+        if (!menu_open && K::isKeyPressed(K::Escape) && escape_release)
+        {
+            menu_open = true;
+            menu = true;
+            escape_release = false;
+        }
+            
+        else if (menu_open && K::isKeyPressed(K::Escape) && escape_release)
+        {
+            menu_open = false;
+            escape_release = false;
+        }
+            
+        if (event.type == sf::Event::KeyReleased && event.key.code == K::Escape)
+            escape_release = true;
+
+        if (event.type == sf::Event::Closed)
         {
             window.close();
-            return main();
         }
 
-
-        if (K::isKeyPressed(K::Enter))
+        if (enter_release && K::isKeyPressed(K::Enter))
+        {
             choose = true;
-
+            enter_release = false;
+            break;
+        }
+            
         else
             choose = false;
+            
+
+        if (event.type == sf::Event::KeyReleased && event.key.code == K::Enter)
+            enter_release = true;
 
         for (int i = 0; i < 4; i++)
         {
@@ -130,11 +156,8 @@ int new_game(sf::RenderWindow& window, sf::Sprite const& startmapbackground, sf:
     if (!buffer.loadFromFile("siren.wav"))
         return -1;
 
-    sf::Text new_game;
-    new_game.setFont(font);
+    sf::Text new_game("Byl zwykly niedzielny poranek. \nSpisz w najlepsze, gdy nagle...",font,40);
     new_game.setPosition(150, 200);
-    new_game.setCharacterSize(40);
-    new_game.setString("Byl zwykly niedzielny poranek. \nSpisz w najlepsze, gdy nagle...");
 
     sf::Clock timer;
 
@@ -218,130 +241,19 @@ bool enemy_player_contact(sf::Sprite& player, sf::Sprite& enemy)
     return false;
 }
 
-void fight(sf::RenderWindow& window, Character& player, Character& enemy, sf::RectangleShape& gui, bool* move_menu, bool& choose, sf::CircleShape& option, bool& menu, sf::Font const& font)
-{
-    float wait_time = 0.2;
-    static sf::Clock t;
-    static int i = 0;
-    sf::Vector2f const options_positions[4] = { {100,500}, {100,600}, {400,500}, {400,600} };
-    sf::Text player_hp;
-    sf::Text enemy_hp;
-    sf::Text menu_text[4];
-    std::string menu_string[4] = { "Atak", "Ekwipunek", "Pomin ture", "Ucieknij" };
-
-    player_hp.setFont(font);
-    player_hp.setPosition(0, 0);
-    player_hp.setCharacterSize(40);
-    player_hp.setString(std::to_string(player.Health).substr(0, int(log10(abs(player.Health))) + 4) + " HP");
-
-    enemy_hp.setFont(font);
-    enemy_hp.setPosition(800, 0);
-    enemy_hp.setCharacterSize(40);
-    enemy_hp.setString(std::to_string(enemy.Health).substr(0, int(log10(abs(enemy.Health))) + 4) + " HP");
-
-    if (menu)
-    {
-        i = 0;
-        menu = false;
-        sf::IntRect rect = player.sprite.getTextureRect();
-        rect.top = 0;
-        rect.left = 460;
-        rect.height = 560;
-        player.sprite.setTextureRect(rect);
-        t.restart();
-    }
-
-    sf::Vector2f pos[4] = { player.sprite.getPosition(),enemy.sprite.getPosition() };
-    player.sprite.setPosition(300, 250);
-    enemy.sprite.setPosition(600, 100);
-
-    if (move_menu[2] && t.getElapsedTime().asSeconds() >= wait_time)
-    {
-        i++;
-        t.restart();
-    }
-
-    else if (move_menu[3] && t.getElapsedTime().asSeconds() >= wait_time)
-    {
-        i--;
-        t.restart();
-    }
-
-    if (i > 3)
-        i = 0;
-    else if (i < 0)
-        i = 3;
-
-    option.setPosition(options_positions[i]);
-
-    window.draw(gui);
-    window.draw(player.sprite);
-    window.draw(enemy.sprite);
-    window.draw(option);
-    window.draw(player_hp);
-    window.draw(enemy_hp);
-    for (int j = 0; j < 4; j++)
-    {
-        menu_text[j].setFont(font);
-        menu_text[j].setPosition(options_positions[j].x + 20, options_positions[j].y);
-        menu_text[j].setCharacterSize(40);
-        menu_text[j].setString(menu_string[j]);
-        window.draw(menu_text[j]);
-    }
-
-    player.sprite.setPosition(pos[0]);
-    enemy.sprite.setPosition(pos[1]);
-
-    if (i == 0 && choose && t.getElapsedTime().asSeconds() >= wait_time)
-    {
-        enemy.Health -= player.Attack;
-        t.restart();
-        if (enemy.Health <= 0)
-        {
-            enemy.sprite.setPosition(-100, -100);
-            enemy.Health = 0;
-        }
-
-        player.Health -= enemy.Attack;
-
-    }
-
-    else if (i == 2 && choose && t.getElapsedTime().asSeconds() >= wait_time)
-    {
-        player.Health -= enemy.Attack;
-        t.restart();
-    }
-
-    else if (i == 3 && choose)
-    {
-        int x = 0, y = 0;
-        if (player.sprite.getPosition().x > enemy.sprite.getPosition().x)
-            x += 30;
-        else
-            x -= 30;
-
-        if (player.sprite.getPosition().y > enemy.sprite.getPosition().y)
-            y += 30;
-        else
-            y -= 30;
-
-        player.sprite.setPosition(player.sprite.getPosition().x + x, player.sprite.getPosition().y + y);
-    }
-}
-
 int game(int new_start)
 {
     const int w = 1000, h = 700;
     bool isMoving[4] = { false, false, false, false };
-    bool choose = false, fight_menu = true, normal_state = true;
+    bool choose = false, menu = true, normal_state = true, menu_open = false;
     K::Key Keys[8] = { K::W,K::Up,K::S,K::Down,K::D,K::Right,K::A,K::Left };
     sf::RenderWindow window(sf::VideoMode(w, h), "Nasza gra 2D");
 
     sf::Font font;
     font.loadFromFile("Textures/BitPap.ttf");
 
-    sf::RectangleShape fight_gui(sf::Vector2f(window.getSize()));
-    fight_gui.setFillColor(sf::Color(0, 0, 0, 255));
+    sf::RectangleShape gui(sf::Vector2f(window.getSize()));
+    gui.setFillColor(sf::Color(0, 0, 0, 255));
 
     const character_type Player_type = { "Textures/main_character.png", 0.17, {0, 0, 460, 560}, 100, 15 };
     const character_type Enemies_type[2] = { {"Textures/Enemies/Slime.png", 2, {2, 2, 61, 57}, 50, 10},{ "Textures/Enemies/Manekin.png", 2, {13 , 6, 31, 52}, 30, 0 } };
@@ -355,12 +267,13 @@ int game(int new_start)
         Enemies.push_back(std::unique_ptr<Character>(new Character(Enemies_type[struct_types[i]])));
     }
 
-    Character Player(Player_type);
-    Player.sprite.setPosition(785, 231);
-
+    
     (*Enemies[0]).sprite.setPosition(400, 200);
     (*Enemies[1]).sprite.setPosition(200, 500);
     (*Enemies[2]).sprite.setPosition(600, 300);
+
+    Character Player(Player_type);
+    Player.sprite.setPosition(785, 231);
 
     sf::CircleShape fight_option(20, 3);
     fight_option.setPosition(100, 100);
@@ -371,12 +284,12 @@ int game(int new_start)
     sf::IntRect rect(0, 0, 228, 181);
     sf::Sprite startmapbackground(startmap, rect);
     startmapbackground.scale(w / 228.0, h / 181.0);
-    
+
     sf::Texture txt2;
     txt2.loadFromFile("Textures/2lvl.png");
     sf::IntRect rect2(0, 0, 174, 131);
     sf::Sprite lvl2(txt2, rect2);
-    lvl2.scale(w /174.0, h / 131.0);
+    lvl2.scale(w / 174.0, h / 131.0);
 
     sf::Texture txt3;
     txt3.loadFromFile("Textures/3lvl.png");
@@ -389,13 +302,13 @@ int game(int new_start)
     sf::IntRect rect4(0, 0, 240, 131);
     sf::Sprite lvl4(txt4, rect4);
     lvl4.scale(w / 240.0, h / 131.0);
-    
+
     sf::Texture txt6;
     txt6.loadFromFile("Textures/6lvl.png");
     sf::IntRect rect6(0, 0, 228, 181);
     sf::Sprite lvl6(txt6, rect6);
     lvl6.scale(w / 228.0, h / 181.0);
-    
+
     sf::Texture txt7;
     txt7.loadFromFile("Textures/7lvl.png");
     sf::IntRect rect7(0, 0, 228, 181);
@@ -414,24 +327,24 @@ int game(int new_start)
     int lvli = 0;
     while (window.isOpen())
     {
-        
-        Event(window, Keys, isMoving, choose);
+
+        Event(window, Keys, isMoving, choose, menu_open, menu);
         window.clear();
         switch (lvli)
         {
         case 0:
-                window.draw(startmapbackground);
-                if (Player.sprite.getPosition().x > 344 && Player.sprite.getPosition().x < 419 && Player.sprite.getPosition().y >178 && sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-                {
-                    lvli++;
-                    Player.sprite.setPosition(0,402);
-                }
-                startmapcol(Player.sprite);
+            window.draw(startmapbackground);
+            if (Player.sprite.getPosition().x > 344 && Player.sprite.getPosition().x < 419 && Player.sprite.getPosition().y >178 && sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+            {
+                lvli++;
+                Player.sprite.setPosition(0, 402);
+            }
+            startmapcol(Player.sprite);
             break;
 
         case 1:
             window.draw(lvl2);
-            if (Player.sprite.getPosition().x > 842 && Player.sprite.getPosition().y > 327 && Player.sprite.getPosition().y <432 && sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+            if (Player.sprite.getPosition().x > 842 && Player.sprite.getPosition().y > 327 && Player.sprite.getPosition().y < 432 && sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
             {
                 lvli++;
                 Player.sprite.setPosition(0, 402);
@@ -447,49 +360,66 @@ int game(int new_start)
             }
             lvl3col(Player.sprite);
             break;
-       case 3:
-           window.draw(lvl4);
-           if (Player.sprite.getPosition().x > 861 && sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-           {
-               lvli++;
-               Player.sprite.setPosition(0, 402);
-           }
-           lvl4col(Player.sprite);
-           break;
-       case 4:
-           window.draw(lvl6);
-           if (Player.sprite.getPosition().x > 539 && Player.sprite.getPosition().x < 677 && Player.sprite.getPosition().y <5 && sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-           {
-               lvli++;
-               Player.sprite.setPosition(459, 591);
-           }
-           lvl6col(Player.sprite);
-           break;
-       case 5:
-           window.draw(lvl7);
-           if (Player.sprite.getPosition().y > 601 && sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-           {
-               lvli--;
-               Player.sprite.setPosition(600, 3);
-           }
-           lvl7col(Player.sprite);
-           break;
-        }
-        std::cout << Player.sprite.getPosition().x << " " << Player.sprite.getPosition().y << std::endl;
-        
-        
-        
-        for (int i = 0; i < Enemies.size(); i++)
-        {
-            if (enemy_player_contact(Player.sprite, (*Enemies[i]).sprite))
+        case 3:
+            window.draw(lvl4);
+            if (Player.sprite.getPosition().x > 861 && sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
             {
-                fight(window, Player, (*Enemies[i]), fight_gui, isMoving, choose, fight_option, fight_menu, font);
-                normal_state = false;
+                lvli++;
+                Player.sprite.setPosition(0, 402);
             }
-
+            lvl4col(Player.sprite);
+            break;
+        case 4:
+            window.draw(lvl6);
+            if (Player.sprite.getPosition().x > 539 && Player.sprite.getPosition().x < 677 && Player.sprite.getPosition().y < 5 && sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+            {
+                lvli++;
+                Player.sprite.setPosition(459, 591);
+            }
+            lvl6col(Player.sprite);
+            break;
+        case 5:
+            window.draw(lvl7);
+            if (Player.sprite.getPosition().y > 601 && sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+            {
+                lvli--;
+                Player.sprite.setPosition(600, 3);
+            }
+            lvl7col(Player.sprite);
+            break;
         }
 
-        if (normal_state)
+
+        if (menu_open)
+        {
+            escape_menu(window, gui, menu_open, isMoving, choose, fight_option, font, menu);
+            normal_state = false;
+        }
+            
+
+        else
+        {
+            for (int i = 0; i < Enemies.size(); i++)
+            {
+                if (enemy_player_contact(Player.sprite, (*Enemies[i]).sprite))
+                {
+                    fight_menu(window, Player, (*Enemies[i]), gui, isMoving, choose, fight_option, menu, font);
+                    normal_state = false;
+                }
+            }
+        }
+
+        
+        if (Player.Health == 0 and !menu_open)
+        {
+            window.draw(gui);
+            sf::Text death("SMIERC!", font, 100);
+            death.setFillColor(sf::Color::Red);
+            death.setPosition(w / 2 - death.getGlobalBounds().width / 2, h / 2 - death.getGlobalBounds().height / 2);
+            window.draw(death);
+        }
+
+        else if (normal_state)
         {
             for (int i = 0; i < Enemies.size(); i++)
             {
@@ -499,15 +429,17 @@ int game(int new_start)
                     i--;
                 }
                 else
-                    window.draw((*Enemies[i]).sprite); 
+                    window.draw((*Enemies[i]).sprite);
             }
-            fight_menu = true;
+            menu = true;
             Player.player_move(isMoving, timer);
             window.draw(Player.sprite);
         }
         window.display();
         normal_state = true;
+        
 
     }
-
     return 0;
+}
+    

@@ -1,12 +1,16 @@
 ﻿  Window.cpp
-C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Window.cpp(166,24): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Window.cpp(289,105): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Window.cpp(316,46): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Window.cpp(333,27): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Window.cpp(345,31): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Window.cpp(258,105): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Window.cpp(286,50): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Window.cpp(292,36): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Window.cpp(298,36): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Window.cpp(304,36): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Window.cpp(310,36): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Window.cpp(316,36): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Window.cpp(402,31): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Window.cpp(424,31): warning C4018: '<': signed/unsigned mismatch
   Generating code
-  2 of 261 functions ( 0.8%) were compiled, the rest were copied from previous compilation.
+  1 of 267 functions ( 0.4%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+    1 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   Projekt C++.vcxproj -> C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Release\Projekt C++.exe

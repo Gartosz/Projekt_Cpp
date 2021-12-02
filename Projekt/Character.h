@@ -1,3 +1,4 @@
+#pragma once
 struct character_type {
     std::string txt_patch;
     float scale;
@@ -20,4 +21,3 @@ private:
     sf::IntRect rect;
     void move(sf::Clock& timer, double const& speed_h, double const& speed_v, const int& top, const int& height);
 };
-#pragma once
