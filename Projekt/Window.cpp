@@ -10,11 +10,12 @@
 
 #define K sf::Keyboard
 
-void Event(sf::RenderWindow& window, K::Key* Keys, bool* isMoving, bool& choose, bool& menu_open, bool& menu)
+void Event(sf::RenderWindow& window, K::Key* Keys, bool* isMoving, bool& choose, bool& menu_open, bool& menu, bool& stats_open)
 {
     sf::Event event;
     static bool escape_release = true;
     static bool enter_release = true;
+    static bool tab_release = true;
     while (window.pollEvent(event))
     {
 
@@ -48,10 +49,26 @@ void Event(sf::RenderWindow& window, K::Key* Keys, bool* isMoving, bool& choose,
             
         else
             choose = false;
-            
 
         if (event.type == sf::Event::KeyReleased && event.key.code == K::Enter)
             enter_release = true;
+
+
+        if (!stats_open && K::isKeyPressed(K::Tab) && tab_release)
+        {
+            stats_open = true;
+            menu = true;
+            tab_release = false;
+        }
+
+        else if (stats_open && K::isKeyPressed(K::Tab) && tab_release)
+        {
+            stats_open = false;
+            tab_release = false;
+        }
+
+        if (event.type == sf::Event::KeyReleased && event.key.code == K::Tab)
+            tab_release = true;
 
         for (int i = 0; i < 4; i++)
         {
@@ -245,7 +262,7 @@ int game(int new_start)
 {
     const int w = 1000, h = 700;
     bool isMoving[4] = { false, false, false, false };
-    bool choose = false, menu = true, normal_state = true, menu_open = false;
+    bool choose = false, menu = true, normal_state = true, menu_open = false, stats_open = false;
     K::Key Keys[8] = { K::W,K::Up,K::S,K::Down,K::D,K::Right,K::A,K::Left };
     sf::RenderWindow window(sf::VideoMode(w, h), "Nasza gra 2D");
 
@@ -255,8 +272,8 @@ int game(int new_start)
     sf::RectangleShape gui(sf::Vector2f(window.getSize()));
     gui.setFillColor(sf::Color(0, 0, 0, 255));
 
-    const character_type Player_type = { "Textures/main_character.png", 0.17, {0, 0, 460, 560}, 100, 15 };
-    const character_type Enemies_type[2] = { {"Textures/Enemies/Slime.png", 2, {2, 2, 61, 57}, 50, 10},{ "Textures/Enemies/Manekin.png", 2, {13 , 6, 31, 52}, 30, 0 } };
+    const character_type Player_type = { "Textures/main_character.png", 0.17, {0, 0, 460, 560}, 100, 100, 15, 50, 40 };
+    const character_type Enemies_type[2] = { {"Textures/Enemies/Slime.png", 2, {2, 2, 61, 57}, 50, 50, 10},{ "Textures/Enemies/Manekin.png", 2, {13 , 6, 31, 52}, 30, 0 } };
 
     std::vector <std::unique_ptr<Character>> Enemies;
 
@@ -275,9 +292,9 @@ int game(int new_start)
     Character Player(Player_type);
     Player.sprite.setPosition(785, 231);
 
-    sf::CircleShape fight_option(20, 3);
-    fight_option.setPosition(100, 100);
-    fight_option.rotate(90);
+    sf::CircleShape option(20, 3);
+    option.setPosition(100, 100);
+    option.rotate(90);
 
     sf::Texture startmap;
     startmap.loadFromFile("Textures/1lvl.png");
@@ -328,7 +345,7 @@ int game(int new_start)
     while (window.isOpen())
     {
 
-        Event(window, Keys, isMoving, choose, menu_open, menu);
+        Event(window, Keys, isMoving, choose, menu_open, menu, stats_open);
         window.clear();
         switch (lvli)
         {
@@ -392,10 +409,15 @@ int game(int new_start)
 
         if (menu_open)
         {
-            escape_menu(window, gui, menu_open, isMoving, choose, fight_option, font, menu);
+            escape_menu(window, gui, menu_open, isMoving, choose, option, font, menu, Player);
             normal_state = false;
         }
             
+        else if (stats_open)
+        {
+            stats_menu(window, Player, gui, isMoving, choose, option, menu, font);
+            normal_state = false;
+        }
 
         else
         {
@@ -403,7 +425,7 @@ int game(int new_start)
             {
                 if (enemy_player_contact(Player.sprite, (*Enemies[i]).sprite))
                 {
-                    fight_menu(window, Player, (*Enemies[i]), gui, isMoving, choose, fight_option, menu, font);
+                    fight_menu(window, Player, (*Enemies[i]), gui, isMoving, choose, option, menu, font);
                     normal_state = false;
                 }
             }

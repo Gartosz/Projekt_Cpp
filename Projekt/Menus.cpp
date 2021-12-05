@@ -2,15 +2,39 @@
 #include "Menus.h"
 #include "Character.h"
 #include "main.h"
+#include <filesystem>
+#include <ctime>
+#include <fstream>
+#include <iomanip>
+#include <iostream>
 
-int escape_menu(sf::RenderWindow& window, sf::RectangleShape& gui, bool& menu_open, bool* move_menu, bool& choose, sf::CircleShape& option, sf::Font const& font, bool& menu)
+void save(const Character &player)
 {
-    sf::Vector2f const options_positions[4] = { {350,200}, {350,400} };
+    if (!std::filesystem::is_directory("Saves"))
+        std::filesystem::create_directory("Saves");
+
+    time_t now = time(NULL);
+    struct tm timeinfo;
+    char buffer[80];
+
+    localtime_s(&timeinfo, &now);
+
+    strftime(buffer, sizeof(buffer), "%d-%m-%Y_%H%M%S", &timeinfo);
+    std::string str(buffer);
+
+    std::ofstream file("./Saves/" + str + ".txt");
+    file << player;
+    file.close();
+}
+
+int escape_menu(sf::RenderWindow& window, sf::RectangleShape& gui, bool& menu_open, bool* move_menu, bool& choose, sf::CircleShape& option, sf::Font const& font, bool& menu, const Character &player)
+{
+    sf::Vector2f const options_positions[3] = { {350,200}, {350,300}, {350, 400} };
     static int i = 0;
     static sf::Clock t;
     float wait_time = 0.2;
-    sf::Text menu_text[2];
-    std::string menu_string[2] = { "Wznow", "Wyjdz" };
+    sf::Text menu_text[3];
+    std::string menu_string[3] = { "Wznow", "Zapisz", "Wyjdz"};
 
     if (menu)
     {
@@ -31,15 +55,15 @@ int escape_menu(sf::RenderWindow& window, sf::RectangleShape& gui, bool& menu_op
         t.restart();
     }
 
-    if (i > 1)
+    if (i > 2)
         i = 0;
     else if (i < 0)
-        i = 1;
+        i = 2;
 
     option.setPosition(options_positions[i]);
     window.draw(gui);
     window.draw(option);
-    for (int j = 0; j < 2; j++)
+    for (int j = 0; j < 3; j++)
     {
         menu_text[j].setFont(font);
         menu_text[j].setPosition(options_positions[j].x + 20, options_positions[j].y);
@@ -49,10 +73,12 @@ int escape_menu(sf::RenderWindow& window, sf::RectangleShape& gui, bool& menu_op
     }
 
     if (i == 0 && choose && t.getElapsedTime().asSeconds() >= wait_time)
-    {
         menu_open = false;
-    }
+
     else if (i == 1 && choose && t.getElapsedTime().asSeconds() >= wait_time)
+        save(player);
+
+    else if (i == 2 && choose && t.getElapsedTime().asSeconds() >= wait_time)
     {
         window.close();
         return main();
@@ -137,7 +163,7 @@ void fight_menu(sf::RenderWindow& window, Character& player, Character& enemy, s
 
     if (i == 0 && choose && t.getElapsedTime().asSeconds() >= wait_time)
     {
-        enemy.Health -= player.Attack;
+        enemy.Health -= player.stats.attack;
         t.restart();
         if (enemy.Health <= 0)
         {
@@ -150,13 +176,13 @@ void fight_menu(sf::RenderWindow& window, Character& player, Character& enemy, s
             player.Health = 0;
         }
         else
-            player.Health -= enemy.Attack;
+            player.Health -= enemy.stats.attack;
 
     }
 
     else if (i == 2 && choose && t.getElapsedTime().asSeconds() >= wait_time)
     {
-        player.Health -= enemy.Attack;
+        player.Health -= enemy.stats.attack;
         t.restart();
         if (player.Health <= 0)
         {
@@ -180,4 +206,117 @@ void fight_menu(sf::RenderWindow& window, Character& player, Character& enemy, s
 
         player.sprite.setPosition(player.sprite.getPosition().x + x, player.sprite.getPosition().y + y);
     }
+}
+
+void stats_menu(sf::RenderWindow& window, Character& player, sf::RectangleShape& gui, bool* move_menu, bool& choose, sf::CircleShape& option, bool& menu, sf::Font const& font)
+{
+    const sf::Vector2f options_positions[11] = { {50,200}, {50,300}, {50, 400}, {50, 500}, {50,630}, {50,50}, {600,500}, {500,200}, {500,300}, {500, 400}, {500, 500} };
+    const sf::Vector2f pos = player.sprite.getPosition();
+    static int i = 0;
+    static sf::Clock t;
+    float wait_time = 0.2;
+    sf::Text menu_text[11];
+    std::string menu_string[11] = { "Maksymalne zdrowie: " + std::to_string(player.stats.max_health), "Atak: " + std::to_string(player.stats.attack), "Celnosc: " + std::to_string(player.stats.accuracy), "Inteligencja: " + std::to_string(player.stats.intelligence), "Dostepne punkty doswiadczenia: " + std::to_string(player.stats.experience),"Statystyki postaci:      Poziom:", "Aktualne zdrowie: " + std::to_string(player.Health).substr(0, int(log10(abs(player.Health))) + 4), std::to_string(player.stats.lvl[0]), std::to_string(player.stats.lvl[1]), std::to_string(player.stats.lvl[2]), std::to_string(player.stats.lvl[3]) };
+    int lvl_up_values[4] = {10,5,5,5};
+    int max_lvl_up[4] = {300/lvl_up_values[0] - player.stats.max_health/lvl_up_values[0], 120 / lvl_up_values[1] - player.stats.attack / lvl_up_values[1], 100 / lvl_up_values[2] - player.stats.accuracy / lvl_up_values[2], 40 / lvl_up_values[3] - player.stats.intelligence / lvl_up_values[3]};
+    
+
+    static sf::Text message;
+    static sf::RectangleShape message_bg;
+
+    player.sprite.setPosition(700,400);
+
+    if (menu)
+    {
+        menu = false;
+        i = 0;
+        message.setFont(font);
+        message.setCharacterSize(55);
+        message.setFillColor(sf::Color::Blue);
+        message_bg.setFillColor(sf::Color(113, 218, 113, 180));
+        t.restart();
+    }
+
+    if (move_menu[1] && t.getElapsedTime().asSeconds() >= wait_time)
+    {
+        i++;
+        t.restart();
+    }
+
+    else if (move_menu[0] && t.getElapsedTime().asSeconds() >= wait_time)
+    {
+        i--;
+        t.restart();
+    }
+
+    if (i > 3)
+        i = 0;
+    else if (i < 0)
+        i = 3;
+
+    option.setPosition(options_positions[i]);
+    window.draw(gui);
+    window.draw(player.sprite);
+    window.draw(option);
+    for (int j = 0; j < sizeof(menu_text) / sizeof(*menu_text); j++)
+    {
+        menu_text[j].setFont(font);
+        menu_text[j].setPosition(options_positions[j].x + 20, options_positions[j].y);
+        menu_text[j].setCharacterSize(40);
+        menu_text[j].setString(menu_string[j]);
+        window.draw(menu_text[j]);
+    }
+
+    if (choose && t.getElapsedTime().asSeconds() >= wait_time)
+    {
+        if (message.getString() == "")
+        {
+            if (player.stats.experience >= player.stats.lvl[i] + 1 && max_lvl_up[i] > 0)
+            {
+                switch (i)
+                {
+                case 0:
+                    player.stats.max_health += lvl_up_values[i];
+                    break;
+                case 1:
+                    player.stats.attack += lvl_up_values[i];
+                    break;
+                case 2:
+                    player.stats.accuracy += lvl_up_values[i];
+                    break;
+                case 3:
+                    player.stats.intelligence += lvl_up_values[i];
+                    break;
+                default:
+                    break;
+                }
+
+                player.stats.experience -= player.stats.lvl[i] + 1;
+                player.stats.lvl[i] ++;
+            }
+            else if (max_lvl_up[i] == 0)
+                message.setString("Nie mozna bardziej ulepszyc\nwybranej statystyki!");
+            else
+                message.setString("Brakuje ci punktow doswiadczenia!");
+            
+            if (message.getString() != "")
+            {
+                message.setPosition(window.getSize().x / 2 - message.getGlobalBounds().width / 2, window.getSize().y / 2 - message.getGlobalBounds().height / 2);
+                message_bg.setSize(sf::Vector2f(message.getGlobalBounds().width + 30, message.getGlobalBounds().height + 30));
+                message_bg.setPosition(window.getSize().x / 2 - message.getGlobalBounds().width / 2 - 15, window.getSize().y / 2 - message.getGlobalBounds().height / 2);
+            }
+            
+        }
+        else
+        {
+            message.setString("");
+            message_bg.setSize(sf::Vector2f(0,0));
+        }
+        
+    }
+    
+    window.draw(message_bg);
+    window.draw(message);
+
+    player.sprite.setPosition(pos);
 }

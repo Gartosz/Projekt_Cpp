@@ -11,8 +11,14 @@ Character::Character(character_type const& values)
     sprite.setTexture(txt);
     sprite.setTextureRect(rect);
     sprite.setScale(values.scale, values.scale);
-    Attack = values.Attack;
     Health = values.Health;
+    stats.max_health = Health;
+    stats.attack = values.attack;
+    stats.accuracy = values.accuracy;
+    stats.intelligence = values.intelligence;
+    stats.experience = values.experience;
+    for (int i = 0; i < 4; i++)
+        stats.lvl[i] = values.lvl[i];
 }
 
 void Character::move(sf::Clock& timer, double const& speed_h, double const& speed_v, const int& top, const int& height)
