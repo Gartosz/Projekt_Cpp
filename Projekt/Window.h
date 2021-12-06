@@ -1,2 +1,2 @@
 #pragma once
-int game(int new_start);
+int game(int new_start, const std::string &filename = "");

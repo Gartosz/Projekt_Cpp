@@ -19,10 +19,10 @@ void save(const Character &player)
 
     localtime_s(&timeinfo, &now);
 
-    strftime(buffer, sizeof(buffer), "%d-%m-%Y_%H%M%S", &timeinfo);
-    std::string str(buffer);
+    strftime(buffer, sizeof(buffer), "%Y-%m-%d_%H%M%S", &timeinfo);
+    std::string filename(buffer);
 
-    std::ofstream file("./Saves/" + str + ".txt");
+    std::ofstream file("./Saves/" + filename + ".txt");
     file << player;
     file.close();
 }

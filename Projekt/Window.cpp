@@ -258,7 +258,7 @@ bool enemy_player_contact(sf::Sprite& player, sf::Sprite& enemy)
     return false;
 }
 
-int game(int new_start)
+int game(int new_start, const std::string &filename = "")
 {
     const int w = 1000, h = 700;
     bool isMoving[4] = { false, false, false, false };
@@ -281,16 +281,24 @@ int game(int new_start)
 
     for (int i = 0; i < sizeof(struct_types) / sizeof(*struct_types); i++)
     {
-        Enemies.push_back(std::unique_ptr<Character>(new Character(Enemies_type[struct_types[i]])));
+        Enemies.push_back(std::unique_ptr<Character>(new Character(Enemies_type[struct_types[i]],0)));
     }
 
+    int lvli = 0;
     
     (*Enemies[0]).sprite.setPosition(400, 200);
     (*Enemies[1]).sprite.setPosition(200, 500);
     (*Enemies[2]).sprite.setPosition(600, 300);
 
-    Character Player(Player_type);
-    Player.sprite.setPosition(785, 231);
+    Character Player(Player_type,0);
+
+    if (filename == "")
+        Player.sprite.setPosition(785, 231);
+    else
+    {
+        Player << filename;
+        lvli = Player.map_lvl;
+    }
 
     sf::CircleShape option(20, 3);
     option.setPosition(100, 100);
@@ -341,7 +349,7 @@ int game(int new_start)
     if (new_start)
         new_game(window, startmapbackground, Player.sprite, font);
 
-    int lvli = 0;
+    
     while (window.isOpen())
     {
 
@@ -406,6 +414,8 @@ int game(int new_start)
             break;
         }
 
+        Player.map_lvl = lvli;
+
 
         if (menu_open)
         {
@@ -423,7 +433,7 @@ int game(int new_start)
         {
             for (int i = 0; i < Enemies.size(); i++)
             {
-                if (enemy_player_contact(Player.sprite, (*Enemies[i]).sprite))
+                if ((*Enemies[i]).map_lvl == lvli && enemy_player_contact(Player.sprite, (*Enemies[i]).sprite))
                 {
                     fight_menu(window, Player, (*Enemies[i]), gui, isMoving, choose, option, menu, font);
                     normal_state = false;
@@ -450,7 +460,7 @@ int game(int new_start)
                     Enemies.erase(Enemies.begin() + i);
                     i--;
                 }
-                else
+                else if ((*Enemies[i]).map_lvl == lvli)
                     window.draw((*Enemies[i]).sprite);
             }
             menu = true;

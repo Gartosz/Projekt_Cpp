@@ -1,4 +1,6 @@
 #pragma once
+#include <fstream>
+
 struct character_type {
     std::string txt_patch;
     float scale;
@@ -25,13 +27,14 @@ public:
         int experience = 0;
     };
     Stats stats;
-    Character(character_type const& values);
+    Character(const character_type &values, const int &map_lvl);
     void player_move(bool* isMoving, sf::Clock& timer);
 
 private:
     float speed = 3;
     sf::IntRect rect;
     void move(sf::Clock& timer, double const& speed_h, double const& speed_v, const int& top, const int& height);
+
     friend std::ostream& operator<<(std::ostream& os, Character const& x) {
         os << x.map_lvl << " " << x.sprite.getPosition().x << " " << x.sprite.getPosition().y << "\n";
         os << x.Health << "\n" << x.stats.experience << "\n";
@@ -39,5 +42,28 @@ private:
         for (int i = 0; i < sizeof(x.stats.lvl)/ sizeof(*x.stats.lvl); i++)
             os << x.stats.lvl[i] << " ";
         return os;
+    }
+
+    friend Character& operator<<(Character &x, const std::string &filename) {
+
+        std::ifstream file(filename);
+        int values[13];
+        for (int i = 0; i < 13; i++)
+            file >> values[i];
+
+        file.close();
+
+        x.map_lvl = values[0];
+        x.sprite.setPosition(values[1],values[2]);
+        x.Health = values[3];
+        x.stats.experience = values[4];
+        x.stats.max_health = values[5];
+        x.stats.attack = values[6];
+        x.stats.accuracy = values[7];
+        x.stats.intelligence = values[8];
+        for (int i = 0; i < 4; i++)
+            x.stats.lvl[i] = values[i + 9];
+
+        return x;
     }
 };

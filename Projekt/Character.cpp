@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include "Character.h"
 
-Character::Character(character_type const& values)
+Character::Character(const character_type &values, const int &map_lvl)
 {
     rect.left = values.size[0];
     rect.top = values.size[1];
@@ -19,6 +19,7 @@ Character::Character(character_type const& values)
     stats.experience = values.experience;
     for (int i = 0; i < 4; i++)
         stats.lvl[i] = values.lvl[i];
+    this->map_lvl = map_lvl;
 }
 
 void Character::move(sf::Clock& timer, double const& speed_h, double const& speed_v, const int& top, const int& height)
