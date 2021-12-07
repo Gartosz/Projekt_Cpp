@@ -70,7 +70,7 @@ int main()
 		while (1)
 		{
 			std::cout << "Podaj nazwe pliku: ";
- 			std::cin >> filename;
+			std::cin >> filename;
 			if (filename.substr(filename.size() - 5, 4) != ".txt")
 				filename += ".txt";
 			if (filename.substr(0, 8) != "./Saves/")

@@ -1,4 +1,4 @@
-#include <SFML/Graphics.hpp>
+﻿#include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <iostream>
 #include "Character.h"
@@ -10,12 +10,13 @@
 
 #define K sf::Keyboard
 
-void Event(sf::RenderWindow& window, K::Key* Keys, bool* isMoving, bool& choose, bool& menu_open, bool& menu, bool& stats_open)
+void Event(sf::RenderWindow& window, K::Key* Keys, bool* isMoving, bool& choose, bool& menu_open, bool& menu, bool& stats_open, bool& eq)
 {
     sf::Event event;
     static bool escape_release = true;
     static bool enter_release = true;
     static bool tab_release = true;
+    static bool i_release = true;
     while (window.pollEvent(event))
     {
 
@@ -25,13 +26,25 @@ void Event(sf::RenderWindow& window, K::Key* Keys, bool* isMoving, bool& choose,
             menu = true;
             escape_release = false;
         }
-            
+
         else if (menu_open && K::isKeyPressed(K::Escape) && escape_release)
         {
             menu_open = false;
             escape_release = false;
         }
-            
+
+        if (!eq && K::isKeyPressed(K::I) && i_release)
+        {
+            eq = true;
+            menu = true;
+            i_release = false;
+        }
+        else if (eq && K::isKeyPressed(K::I) && i_release)
+        {
+            eq = false;
+            i_release = false;
+        }
+
         if (event.type == sf::Event::KeyReleased && event.key.code == K::Escape)
             escape_release = true;
 
@@ -46,7 +59,7 @@ void Event(sf::RenderWindow& window, K::Key* Keys, bool* isMoving, bool& choose,
             enter_release = false;
             break;
         }
-            
+
         else
             choose = false;
 
@@ -69,6 +82,8 @@ void Event(sf::RenderWindow& window, K::Key* Keys, bool* isMoving, bool& choose,
 
         if (event.type == sf::Event::KeyReleased && event.key.code == K::Tab)
             tab_release = true;
+        if (event.type == sf::Event::KeyReleased && event.key.code == K::I)
+            i_release = true;
 
         for (int i = 0; i < 4; i++)
         {
@@ -106,14 +121,14 @@ void startmapcol(sf::Sprite& a)
     //kolizja z szaf�
     if (a.getPosition().y < 225 && a.getPosition().x <= 204 && a.getPosition().x >= 204 - 3)a.setPosition(a.getPosition().x + 3, a.getPosition().y);
     if (a.getPosition().y == 225 && a.getPosition().x < 204 && a.getPosition().x < 849)a.setPosition(a.getPosition().x, a.getPosition().y + 3);
-    
+
 }
 void lvl2col(sf::Sprite& a)
 {
     //kolizja gornej sciany
-    if (a.getPosition().y < 267)a.setPosition(a.getPosition().x, 267); 
+    if (a.getPosition().y < 267)a.setPosition(a.getPosition().x, 267);
     //kolizja dolnej sciany
-    if (a.getPosition().y > 516) { a.setPosition(a.getPosition().x, 516); std::cout << "to ja";}
+    if (a.getPosition().y > 516) { a.setPosition(a.getPosition().x, 516); std::cout << "to ja"; }
     //kolizja lewej sciany
     if (a.getPosition().x < 0)a.setPosition(0, a.getPosition().y);
     //kolizja prawej sciany
@@ -124,7 +139,7 @@ void lvl3col(sf::Sprite& a)
     //kolizja gornej sciany
     if (a.getPosition().y < 309)a.setPosition(a.getPosition().x, 309);
     //kolizja dolnej sciany
-    if (a.getPosition().y > 420)a.setPosition(a.getPosition().x,420);
+    if (a.getPosition().y > 420)a.setPosition(a.getPosition().x, 420);
     //kolizja lewej sciany
     if (a.getPosition().x < 0)a.setPosition(0, a.getPosition().y);
     //kolizja prawej sciany
@@ -173,7 +188,7 @@ int new_game(sf::RenderWindow& window, sf::Sprite const& startmapbackground, sf:
     if (!buffer.loadFromFile("siren.wav"))
         return -1;
 
-    sf::Text new_game("Byl zwykly niedzielny poranek. \nSpisz w najlepsze, gdy nagle...",font,40);
+    sf::Text new_game("Byl zwykly niedzielny poranek. \nSpisz w najlepsze, gdy nagle...", font, 40);
     new_game.setPosition(150, 200);
 
     sf::Clock timer;
@@ -258,11 +273,11 @@ bool enemy_player_contact(sf::Sprite& player, sf::Sprite& enemy)
     return false;
 }
 
-int game(int new_start, const std::string &filename = "")
+int game(int new_start, const std::string& filename = "")
 {
     const int w = 1000, h = 700;
     bool isMoving[4] = { false, false, false, false };
-    bool choose = false, menu = true, normal_state = true, menu_open = false, stats_open = false;
+    bool choose = false, menu = true, normal_state = true, menu_open = false, stats_open = false,eq=false;
     K::Key Keys[8] = { K::W,K::Up,K::S,K::Down,K::D,K::Right,K::A,K::Left };
     sf::RenderWindow window(sf::VideoMode(w, h), "Nasza gra 2D");
 
@@ -281,16 +296,16 @@ int game(int new_start, const std::string &filename = "")
 
     for (int i = 0; i < sizeof(struct_types) / sizeof(*struct_types); i++)
     {
-        Enemies.push_back(std::unique_ptr<Character>(new Character(Enemies_type[struct_types[i]],0)));
+        Enemies.push_back(std::unique_ptr<Character>(new Character(Enemies_type[struct_types[i]], 0)));
     }
 
     int lvli = 0;
-    
+
     (*Enemies[0]).sprite.setPosition(400, 200);
     (*Enemies[1]).sprite.setPosition(200, 500);
     (*Enemies[2]).sprite.setPosition(600, 300);
 
-    Character Player(Player_type,0);
+    Character Player(Player_type, 0);
 
     if (filename == "")
         Player.sprite.setPosition(785, 231);
@@ -305,37 +320,37 @@ int game(int new_start, const std::string &filename = "")
     option.rotate(90);
 
     sf::Texture startmap;
-    startmap.loadFromFile("Textures/1lvl.png");
+    startmap.loadFromFile("Textures/levels/1lvl.png");
     sf::IntRect rect(0, 0, 228, 181);
     sf::Sprite startmapbackground(startmap, rect);
     startmapbackground.scale(w / 228.0, h / 181.0);
 
     sf::Texture txt2;
-    txt2.loadFromFile("Textures/2lvl.png");
+    txt2.loadFromFile("Textures/levels/2lvl.png");
     sf::IntRect rect2(0, 0, 174, 131);
     sf::Sprite lvl2(txt2, rect2);
     lvl2.scale(w / 174.0, h / 131.0);
 
     sf::Texture txt3;
-    txt3.loadFromFile("Textures/3lvl.png");
+    txt3.loadFromFile("Textures/levels/3lvl.png");
     sf::IntRect rect3(0, 0, 240, 131);
     sf::Sprite lvl3(txt3, rect3);
     lvl3.scale(w / 240.0, h / 131.0);
 
     sf::Texture txt4;
-    txt4.loadFromFile("Textures/4lvl.png");
+    txt4.loadFromFile("Textures/levels/4lvl.png");
     sf::IntRect rect4(0, 0, 240, 131);
     sf::Sprite lvl4(txt4, rect4);
     lvl4.scale(w / 240.0, h / 131.0);
 
     sf::Texture txt6;
-    txt6.loadFromFile("Textures/6lvl.png");
+    txt6.loadFromFile("Textures/levels/6lvl.png");
     sf::IntRect rect6(0, 0, 228, 181);
     sf::Sprite lvl6(txt6, rect6);
     lvl6.scale(w / 228.0, h / 181.0);
 
     sf::Texture txt7;
-    txt7.loadFromFile("Textures/7lvl.png");
+    txt7.loadFromFile("Textures/levels/7lvl.png");
     sf::IntRect rect7(0, 0, 228, 181);
     sf::Sprite lvl7(txt7, rect7);
     lvl7.scale(w / 228.0, h / 181.0);
@@ -349,11 +364,11 @@ int game(int new_start, const std::string &filename = "")
     if (new_start)
         new_game(window, startmapbackground, Player.sprite, font);
 
-    
+
     while (window.isOpen())
     {
 
-        Event(window, Keys, isMoving, choose, menu_open, menu, stats_open);
+        Event(window, Keys, isMoving, choose, menu_open, menu, stats_open,eq);
         window.clear();
         switch (lvli)
         {
@@ -416,16 +431,20 @@ int game(int new_start, const std::string &filename = "")
 
         Player.map_lvl = lvli;
 
-
         if (menu_open)
         {
             escape_menu(window, gui, menu_open, isMoving, choose, option, font, menu, Player);
             normal_state = false;
         }
-            
+
         else if (stats_open)
         {
             stats_menu(window, Player, gui, isMoving, choose, option, menu, font);
+            normal_state = false;
+        }
+        else if (eq)
+        {
+            ekwipunek(window, Player,gui,isMoving,choose,option,menu,font);
             normal_state = false;
         }
 
@@ -441,7 +460,7 @@ int game(int new_start, const std::string &filename = "")
             }
         }
 
-        
+
         if (Player.Health == 0 and !menu_open)
         {
             window.draw(gui);
@@ -469,9 +488,8 @@ int game(int new_start, const std::string &filename = "")
         }
         window.display();
         normal_state = true;
-        
+
 
     }
     return 0;
 }
-    

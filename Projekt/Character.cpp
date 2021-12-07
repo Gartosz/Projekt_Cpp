@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include "Character.h"
 
-Character::Character(const character_type &values, const int &map_lvl)
+Character::Character(const character_type& values, const int& map_lvl)
 {
     rect.left = values.size[0];
     rect.top = values.size[1];

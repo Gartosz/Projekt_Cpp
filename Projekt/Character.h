@@ -19,7 +19,7 @@ public:
     float Health;
     sf::Texture txt;
     sf::Sprite sprite;
-    int map_lvl=0;
+    int map_lvl = 0;
     struct Stats
     {
         int max_health = 0, attack = 0, accuracy = 0, intelligence = 0;
@@ -27,7 +27,9 @@ public:
         int experience = 0;
     };
     Stats stats;
-    Character(const character_type &values, const int &map_lvl);
+    std::string items_n[6] ={ "Mala apteczka","Duza apteczka","Jablko","Pistolet","Butelka","Noz" };
+    int items_v[6] = { 1,0,2,0,0,1 };
+    Character(const character_type& values, const int& map_lvl);
     void player_move(bool* isMoving, sf::Clock& timer);
 
 private:
@@ -39,12 +41,12 @@ private:
         os << x.map_lvl << " " << x.sprite.getPosition().x << " " << x.sprite.getPosition().y << "\n";
         os << x.Health << "\n" << x.stats.experience << "\n";
         os << x.stats.max_health << " " << x.stats.attack << " " << x.stats.accuracy << " " << x.stats.intelligence << "\n";
-        for (int i = 0; i < sizeof(x.stats.lvl)/ sizeof(*x.stats.lvl); i++)
+        for (int i = 0; i < sizeof(x.stats.lvl) / sizeof(*x.stats.lvl); i++)
             os << x.stats.lvl[i] << " ";
         return os;
     }
 
-    friend Character& operator<<(Character &x, const std::string &filename) {
+    friend Character& operator<<(Character& x, const std::string& filename) {
 
         std::ifstream file(filename);
         int values[13];
@@ -54,7 +56,7 @@ private:
         file.close();
 
         x.map_lvl = values[0];
-        x.sprite.setPosition(values[1],values[2]);
+        x.sprite.setPosition(values[1], values[2]);
         x.Health = values[3];
         x.stats.experience = values[4];
         x.stats.max_health = values[5];
