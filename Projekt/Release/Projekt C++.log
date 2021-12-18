@@ -1,36 +1,15 @@
-﻿  Character.cpp
-F:\Projekt C++\Gra 2D\Projekt C++\Character.h(9,22): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-F:\Projekt C++\Gra 2D\Projekt C++\Character.h(57,48): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-F:\Projekt C++\Gra 2D\Projekt C++\Character.h(57,38): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-F:\Projekt C++\Gra 2D\Projekt C++\Character.h(58,28): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-F:\Projekt C++\Gra 2D\Projekt C++\Character.cpp(15,24): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-F:\Projekt C++\Gra 2D\Projekt C++\Character.cpp(30,42): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-F:\Projekt C++\Gra 2D\Projekt C++\Character.cpp(30,25): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-  Menus.cpp
-F:\Projekt C++\Gra 2D\Projekt C++\Character.h(9,22): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-F:\Projekt C++\Gra 2D\Projekt C++\Character.h(57,48): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-F:\Projekt C++\Gra 2D\Projekt C++\Character.h(57,38): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-F:\Projekt C++\Gra 2D\Projekt C++\Character.h(58,28): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-F:\Projekt C++\Gra 2D\Projekt C++\Menus.cpp(35,26): warning C4305: 'initializing': truncation from 'double' to 'float'
-F:\Projekt C++\Gra 2D\Projekt C++\Menus.cpp(92,26): warning C4305: 'initializing': truncation from 'double' to 'float'
-F:\Projekt C++\Gra 2D\Projekt C++\Menus.cpp(217,26): warning C4305: 'initializing': truncation from 'double' to 'float'
-  Window.cpp
-F:\Projekt C++\Gra 2D\Projekt C++\Character.h(9,22): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-F:\Projekt C++\Gra 2D\Projekt C++\Character.h(57,48): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-F:\Projekt C++\Gra 2D\Projekt C++\Character.h(57,38): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-F:\Projekt C++\Gra 2D\Projekt C++\Character.h(58,28): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-F:\Projekt C++\Gra 2D\Projekt C++\Window.cpp(275,118): warning C4305: 'initializing': truncation from 'double' to 'float'
-F:\Projekt C++\Gra 2D\Projekt C++\Window.cpp(311,50): warning C4305: 'argument': truncation from 'double' to 'float'
-F:\Projekt C++\Gra 2D\Projekt C++\Window.cpp(317,36): warning C4305: 'argument': truncation from 'double' to 'float'
-F:\Projekt C++\Gra 2D\Projekt C++\Window.cpp(323,36): warning C4305: 'argument': truncation from 'double' to 'float'
-F:\Projekt C++\Gra 2D\Projekt C++\Window.cpp(329,36): warning C4305: 'argument': truncation from 'double' to 'float'
-F:\Projekt C++\Gra 2D\Projekt C++\Window.cpp(335,36): warning C4305: 'argument': truncation from 'double' to 'float'
-F:\Projekt C++\Gra 2D\Projekt C++\Window.cpp(341,36): warning C4305: 'argument': truncation from 'double' to 'float'
-F:\Projekt C++\Gra 2D\Projekt C++\Window.cpp(434,31): warning C4018: '<': signed/unsigned mismatch
-F:\Projekt C++\Gra 2D\Projekt C++\Window.cpp(456,31): warning C4018: '<': signed/unsigned mismatch
+﻿  Scenes.cpp
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Scenes.cpp(112,15): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Scenes.cpp(112,104): warning C4018: '<=': signed/unsigned mismatch
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Scenes.cpp(116,112): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Scenes.cpp(122,58): warning C4018: '>=': signed/unsigned mismatch
   Generating code
-  3 of 584 functions ( 0.5%) were compiled, the rest were copied from previous compilation.
-    1 functions were new in current compilation
-    9 functions had inline decision re-evaluated but remain unchanged
+  2 of 627 functions ( 0.3%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    2 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
-  Projekt C++.vcxproj -> F:\Projekt C++\Gra 2D\Projekt C++\Release\Projekt C++.exe
+  Projekt C++.vcxproj -> C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Release\Projekt C++.exe

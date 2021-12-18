@@ -1,1 +1,18 @@
-﻿
+﻿  Window.cpp
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Character.h(9,22): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Character.h(59,49): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Character.h(59,38): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Character.h(60,28): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Window.cpp(292,70): warning C4018: '<=': signed/unsigned mismatch
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Window.cpp(301,53): warning C4018: '>=': signed/unsigned mismatch
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Window.cpp(342,118): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Window.cpp(380,50): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Window.cpp(386,36): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Window.cpp(392,36): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Window.cpp(398,36): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Window.cpp(404,36): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Window.cpp(410,36): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Window.cpp(504,31): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Window.cpp(528,31): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Window.cpp(256): warning C4715: 'new_game': not all control paths return a value
+  Projekt C++.vcxproj -> C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Debug\Projekt C++.exe

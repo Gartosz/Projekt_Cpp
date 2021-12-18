@@ -1,16 +1,15 @@
 ﻿#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
 #include <iostream>
 #include "Character.h"
 #include "Menus.h"
 #include "main.h"
 #include <math.h>
 #include <vector>
-
+#include "Scenes.h"
 
 #define K sf::Keyboard
 
-void Event(sf::RenderWindow& window, K::Key* Keys, bool* isMoving, bool& choose, bool& menu_open, bool& menu, bool& stats_open, bool& eq)
+void Event(sf::RenderWindow& window, const K::Key* Keys, bool* isMoving, bool& choose, bool& menu_open, bool& menu, bool& stats_open, bool& eq)
 {
     sf::Event event;
     static bool escape_release = true;
@@ -179,85 +178,7 @@ void lvl7col(sf::Sprite& a)
     //kolizja prawej sciany
     if (a.getPosition().x > 920)a.setPosition(920, a.getPosition().y);
 }
-int new_game(sf::RenderWindow& window, sf::Sprite const& startmapbackground, sf::Sprite const& main_ch, sf::Font const& font)
-{
-    sf::RectangleShape fade(sf::Vector2f(window.getSize()));
-    fade.setFillColor(sf::Color(0, 0, 0, 255));
 
-    sf::SoundBuffer buffer;
-    if (!buffer.loadFromFile("siren.wav"))
-        return -1;
-
-    sf::Text new_game("Byl zwykly niedzielny poranek. \nSpisz w najlepsze, gdy nagle...", font, 40);
-    new_game.setPosition(150, 200);
-
-    sf::Clock timer;
-
-    sf::Sound sound;
-    sound.setVolume(10);
-    sound.setBuffer(buffer);
-
-    int i = 255;
-    bool s = false;
-    int start = 0;
-
-    while (window.isOpen())
-    {
-        window.draw(startmapbackground);
-        window.draw(main_ch);
-        window.draw(fade);
-
-        switch (start)
-        {
-        case 0:
-            window.draw(new_game);
-
-            if (timer.getElapsedTime().asSeconds() >= 4)
-            {
-                new_game.setString("Budzi Cie dzwiek syreny...");
-                start++;
-                timer.restart();
-            }
-
-            break;
-        case 1:
-            start++;
-            sound.play();
-            break;
-        case 2:
-            if (timer.getElapsedTime().asSeconds() >= 1)
-            {
-                start++;
-                timer.restart();
-            }
-            break;
-        case 3:
-            window.draw(new_game);
-
-            if (timer.getElapsedTime().asSeconds() >= 4)
-            {
-                start++;
-                s = true;
-            }
-            break;
-        default:
-            break;
-        }
-
-        if (s && i > 0)
-        {
-            fade.setFillColor(sf::Color(0, 0, 0, i));
-            if (timer.getElapsedTime().asMilliseconds() >= 20)
-                i--;
-        }
-
-        if (i == 0)
-            break;
-
-        window.display();
-
-    }
-}
 
 bool enemy_player_contact(sf::Sprite& player, sf::Sprite& enemy)
 {
@@ -273,16 +194,16 @@ bool enemy_player_contact(sf::Sprite& player, sf::Sprite& enemy)
     return false;
 }
 
-int game(int new_start, const std::string& filename = "")
+int game(int new_start, const std::string &filename = "")
 {
     const int w = 1000, h = 700;
     bool isMoving[4] = { false, false, false, false };
-    bool choose = false, menu = true, normal_state = true, menu_open = false, stats_open = false,eq=false;
+    bool choose = false, menu = true, normal_state = true, menu_open = false, stats_open = false, eq = false;
     K::Key Keys[8] = { K::W,K::Up,K::S,K::Down,K::D,K::Right,K::A,K::Left };
     sf::RenderWindow window(sf::VideoMode(w, h), "Nasza gra 2D");
 
     sf::Font font;
-    font.loadFromFile("Textures/BitPap.ttf");
+    font.loadFromFile("Textures/HannoverMesseSans-dewK.ttf");
 
     sf::RectangleShape gui(sf::Vector2f(window.getSize()));
     gui.setFillColor(sf::Color(0, 0, 0, 255));
@@ -292,20 +213,21 @@ int game(int new_start, const std::string& filename = "")
 
     std::vector <std::unique_ptr<Character>> Enemies;
 
-    int struct_types[3] = { 0,1,0 };
+    int struct_types[3] = {0,1,0};
 
     for (int i = 0; i < sizeof(struct_types) / sizeof(*struct_types); i++)
     {
-        Enemies.push_back(std::unique_ptr<Character>(new Character(Enemies_type[struct_types[i]], 0)));
+        Enemies.push_back(std::unique_ptr<Character>(new Character(Enemies_type[struct_types[i]], 5)));
     }
 
-    int lvli = 0;
 
     (*Enemies[0]).sprite.setPosition(400, 200);
     (*Enemies[1]).sprite.setPosition(200, 500);
     (*Enemies[2]).sprite.setPosition(600, 300);
 
-    Character Player(Player_type, 0);
+    int lvli = 0;
+
+    Character Player(Player_type, lvli);
 
     if (filename == "")
         Player.sprite.setPosition(785, 231);
@@ -358,18 +280,11 @@ int game(int new_start, const std::string& filename = "")
     sf::Clock timer;
 
     window.setFramerateLimit(60);
-
-    window.display();
-
-    if (new_start)
-        new_game(window, startmapbackground, Player.sprite, font);
-
-
+        
     while (window.isOpen())
     {
-
-        Event(window, Keys, isMoving, choose, menu_open, menu, stats_open,eq);
         window.clear();
+        Event(window, Keys, isMoving, choose, menu_open, menu, stats_open, eq);
         switch (lvli)
         {
         case 0:
@@ -399,6 +314,12 @@ int game(int new_start, const std::string& filename = "")
                 Player.sprite.setPosition(0, 402);
             }
             lvl3col(Player.sprite);
+            if (new_start && Player.sprite.getPosition().x >= 250)
+            {
+                normal_state = false;
+                window.draw(Player.sprite);
+                bunker(window, font, new_start);
+            }
             break;
         case 3:
             window.draw(lvl4);
@@ -444,7 +365,7 @@ int game(int new_start, const std::string& filename = "")
         }
         else if (eq)
         {
-            ekwipunek(window, Player,gui,isMoving,choose,option,menu,font);
+            ekwipunek(window, Player, gui, isMoving, choose, option, menu, font);
             normal_state = false;
         }
 
@@ -460,15 +381,17 @@ int game(int new_start, const std::string& filename = "")
             }
         }
 
-
+            
         if (Player.Health == 0 and !menu_open)
         {
             window.draw(gui);
-            sf::Text death("SMIERC!", font, 100);
+            sf::Text death(L"ŚMIERĆ!", font, 100);
             death.setFillColor(sf::Color::Red);
             death.setPosition(w / 2 - death.getGlobalBounds().width / 2, h / 2 - death.getGlobalBounds().height / 2);
             window.draw(death);
         }
+
+            
 
         else if (normal_state)
         {
@@ -486,10 +409,12 @@ int game(int new_start, const std::string& filename = "")
             Player.player_move(isMoving, timer);
             window.draw(Player.sprite);
         }
-        window.display();
+
+        if (new_start && new_start < 3)
+            new_game(window, font, new_start);
+
         normal_state = true;
-
-
+        window.display();
     }
     return 0;
 }
