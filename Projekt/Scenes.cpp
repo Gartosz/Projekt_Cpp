@@ -12,7 +12,7 @@ int new_game(sf::RenderWindow& window, const sf::Font& font, int& start_value)
 
     if (start_value == 1)
     {
-        text.setString("Byl zwykly niedzielny poranek. \nSpisz w najlepsze, gdy nagle...");
+        text.setString(L"By³ zwyk³y niedzielny poranek. \nŒpisz w najlepsze, gdy nagle...");
         text.setFont(font);
         text.setCharacterSize(40);
         fade.setSize(sf::Vector2f(window.getSize()));
@@ -34,7 +34,7 @@ int new_game(sf::RenderWindow& window, const sf::Font& font, int& start_value)
 
         if (timer.getElapsedTime().asSeconds() >= 4)
         {
-            text.setString("Budzi Cie dzwiek syreny...");
+            text.setString(L"Budzi Ciê dŸwiêk syreny...");
             start++;
             timer.restart();
         }

@@ -25,7 +25,7 @@ int main()
 		std::wcout << "\x1b[" << k[0] << L"m1. Zacznij nową grę\n";
 		std::wcout << "\x1b[" << k[1] << L"m2. Kontynuuj grę\n";
 		std::wcout << "\x1b[" << k[2] << L"m3. Wczytaj grę\n";
-		std::wcout << "\x1b[" << k[3] << L"m4. Opis\n\x1b[0m";
+		std::wcout << "\x1b[" << k[3] << "m4. Opis\n\x1b[0m";
 		std::wcout << "\x1b[" << k[4] << L"m5. Wyjście\n\x1b[0m";
 		c = _getch();
 		switch (c)
@@ -64,7 +64,7 @@ int main()
 	default:
 		break;
 	case 1:
-		game(3);
+		game(1);
 		break;
 	case 2:
 		game(0);
@@ -82,7 +82,7 @@ int main()
 			if (std::filesystem::exists(filename))
 				break;
 			else
-				std::cout << "Brak pliku!\n";
+				std::wcout << "Brak pliku!\n";
 		}
 		game(0, filename);
 		break;
@@ -91,14 +91,14 @@ int main()
 		system("cls");
 		for (int i = 0; i < opis.length(); i++)
 		{
-			std::cout << opis[i];
+			std::wcout << opis[i];
 			Sleep(30);
 		}
 		c = _getch();
 		return main();
 		break;
 	case 5:
-		std::cout << "Do zobaczenia :)";
+		std::wcout << "Do zobaczenia :)";
 		Sleep(2000);
 		return 0;
 		break;

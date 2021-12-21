@@ -1,14 +1,19 @@
-﻿  Scenes.cpp
-C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Scenes.cpp(112,15): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Scenes.cpp(112,104): warning C4018: '<=': signed/unsigned mismatch
-C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Scenes.cpp(116,112): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
-          with
-          [
-              T=unsigned int
-          ]
-C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Scenes.cpp(122,58): warning C4018: '>=': signed/unsigned mismatch
+﻿  Window.cpp
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Character.h(9,22): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Character.h(59,49): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Character.h(59,38): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Character.h(60,28): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Window.cpp(211,118): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Window.cpp(248,50): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Window.cpp(254,36): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Window.cpp(260,36): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Window.cpp(266,36): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Window.cpp(272,36): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Window.cpp(278,36): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Window.cpp(379,35): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Window.cpp(403,35): warning C4018: '<': signed/unsigned mismatch
   Generating code
-  2 of 627 functions ( 0.3%) were compiled, the rest were copied from previous compilation.
+  1 of 630 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     2 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
