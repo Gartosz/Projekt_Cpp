@@ -29,12 +29,12 @@ void save(const Character& player)
 
 int escape_menu(sf::RenderWindow& window, sf::RectangleShape& gui, bool& menu_open, bool* move_menu, bool& choose, sf::CircleShape& option, sf::Font const& font, bool& menu, const Character& player)
 {
-    sf::Vector2f const options_positions[4] = { {350,200}, {350,300}, {350, 400}, {350, 500} };
+    sf::Vector2f const options_positions[3] = { {350,200}, {350,300}, {350, 400} };
     static int i = 0;
     static sf::Clock t;
     float wait_time = 0.2;
-    sf::Text menu_text[4];
-    std::wstring menu_string[4] = { L"Wznów", L"Zapisz", L"WyjdŸ do menu g³ównego", L"WyjdŸ do pulpitu"};
+    sf::Text menu_text[3];
+    std::string menu_string[3] = { "Wznow", "Zapisz", "Wyjdz" };
 
     if (menu)
     {
@@ -55,18 +55,15 @@ int escape_menu(sf::RenderWindow& window, sf::RectangleShape& gui, bool& menu_op
         t.restart();
     }
 
-    
-
-    if (i > int(sizeof(menu_text) / sizeof(*menu_text)) - 1)
+    if (i > 2)
         i = 0;
-        
     else if (i < 0)
-        i = int(sizeof(menu_text) / sizeof(*menu_text)) - 1;
+        i = 2;
 
     option.setPosition(options_positions[i]);
     window.draw(gui);
     window.draw(option);
-    for (int j = 0; j < sizeof(menu_text)/sizeof(*menu_text); j++)
+    for (int j = 0; j < 3; j++)
     {
         menu_text[j].setFont(font);
         menu_text[j].setPosition(options_positions[j].x + 20, options_positions[j].y);
@@ -87,12 +84,6 @@ int escape_menu(sf::RenderWindow& window, sf::RectangleShape& gui, bool& menu_op
         return main();
     }
 
-    else if (i == 3 && choose && t.getElapsedTime().asSeconds() >= wait_time)
-    {
-        window.close();
-        return 0;
-    }
-
 
 }
 
@@ -105,7 +96,7 @@ void fight_menu(sf::RenderWindow& window, Character& player, Character& enemy, s
     sf::Text player_hp;
     sf::Text enemy_hp;
     sf::Text menu_text[4];
-    std::wstring menu_string[4] = { L"Atak", L"Ekwipunek", L"Pomiñ turê", L"Ucieknij" };
+    std::string menu_string[4] = { "Atak", "Ekwipunek", "Pomin ture", "Ucieknij" };
 
     player_hp.setFont(font);
     player_hp.setPosition(0, 0);
@@ -407,17 +398,17 @@ void ekwipunek(sf::RenderWindow& window, Character& player, sf::RectangleShape& 
                 {
                 case 0:
                     player.items_v[i]--;
-                    player.Health += round(player.Health * 0.15);
+                    player.Health += round(player.stats.max_health * 0.15);
                     if (player.Health > player.stats.max_health)player.Health = player.stats.max_health;
                     break;
                 case 1:
                     player.items_v[i]--;
-                    player.Health += round(player.Health * 0.3);
+                    player.Health += round(player.stats.max_health * 0.3);
                     if (player.Health > player.stats.max_health)player.Health = player.stats.max_health;
                     break;
                 case 2:
                     player.items_v[i]--;
-                    player.Health += round(player.Health * 0.05);
+                    player.Health += round(player.stats.max_health * 0.05);
                     if (player.Health > player.stats.max_health)player.Health = player.stats.max_health;
                     break;
                 case 3:
