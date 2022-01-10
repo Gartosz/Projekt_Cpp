@@ -318,7 +318,7 @@ int game(int new_start, const std::string &filename = "")
             {
                 normal_state = false;
                 window.draw(Player.sprite);
-                bunker(window, font, new_start);
+                bunker(window, font, new_start, lvl6);
             }
             break;
         case 3:

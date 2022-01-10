@@ -34,7 +34,7 @@ int new_game(sf::RenderWindow& window, const sf::Font& font, int& start_value)
 
         if (timer.getElapsedTime().asSeconds() >= 4)
         {
-            text.setString(L"Budzi Ciê dŸwiêk syreny...");
+            text.setString(L"Budzi Ciê dŸwiêk syreny.");
             start++;
             timer.restart();
         }
@@ -76,40 +76,42 @@ int new_game(sf::RenderWindow& window, const sf::Font& font, int& start_value)
 
 }
 
-void bunker(sf::RenderWindow& window, sf::Font const& font, int& start_value)
+void bunker(sf::RenderWindow& window, sf::Font const& font, int& start_value, const sf::Sprite &map)
 {
     static int i = 0, j = 0;
-    static sf::RectangleShape fade(sf::Vector2f(window.getSize()));
+    static sf::RectangleShape fade(sf::Vector2f(window.getSize())), fade2(sf::Vector2f(window.getSize()));
     static sf::Text text;
-    const std::wstring strings[4] = { L"Uda³o ci siê dotrzeæ do bunkra" , L"W œrodku widzisz wiêcej osób", L"Po chwili s³ychac wybuch", L"Uspokajasz siê myœl¹, ze wszystko sie jakoœ u³o¿y..." };
+    const std::wstring strings[10] = { L"Uda³o ci siê dotrzeæ do bunkra na czas." , L"W œrodku widzisz tylko spore zapasy jedzenia, wody\ni innych potrzebnych do przetrwania rzeczy.", L"Po chwili s³ychaæ wybuch.", L"Przypomina Ci siê, ¿e wczoraj Twoja rodzina\nwyjecha³a na kilka dni.", L"Nie wiesz czy j¹ jeszcze kiedyœ zobaczysz.", L"Starasz siê uspokoiæ myœl¹, ¿e wszystko sie jakoœ u³o¿y...", L" ", L"Po kilku tygodniach spêdzonych samotnie kilkanaœcie metrów\npod ziemi¹, postanawiasz wyjœæ na powierzchniê...", L"Gdy to zrobi³eœ by³eœ w szoku widz¹c to,\njak zmieni³o siê otoczenie."};
     static sf::Clock timer, wait;
     const int time_stamp = 40;
 
     if (start_value == 3)
     {
         fade.setFillColor(sf::Color(0, 0, 0, 0));
+        fade2.setFillColor(sf::Color(255, 255, 255, 100));
         text.setCharacterSize(40);
         text.setFont(font);
         start_value++;
     }
 
-    if (timer.getElapsedTime().asMilliseconds() >= 20 && i < 255) {
+    if (start_value < 5 && timer.getElapsedTime().asMilliseconds() >= 20 && i < 255) {
         ++i;
         fade.setFillColor(sf::Color(0, 0, 0, i));
+        timer.restart();
     }
 
-    window.draw(fade);
-
-    if (i == 255)
+    else if (start_value < 5 && i == 255)
     {
         timer.restart();
         ++i;
     }
 
-    else if (i > 255)
+    window.draw(fade);
+
+    if (i > 255)
     {
 
-        if (j < strings[i - 256].length() && wait.getElapsedTime().asMilliseconds() >= time_stamp && j <= strings[i - 256].length())
+        if (start_value <5 && j < strings[i - 256].length() && wait.getElapsedTime().asMilliseconds() >= time_stamp && j <= strings[i - 256].length())
         {
             ++j;
             text.setString(strings[i - 256].substr(0, j));
@@ -119,15 +121,70 @@ void bunker(sf::RenderWindow& window, sf::Font const& font, int& start_value)
         }
 
 
-        else if (timer.getElapsedTime().asMilliseconds() >= time_stamp * strings[i - 256].length() + 4000)
+        else if (start_value < 5 && timer.getElapsedTime().asMilliseconds() >= time_stamp * strings[i - 256].length() + 4000 && i - 256 < int(sizeof(strings) / sizeof(*strings)) - 1)
         {
             ++i;
             j = 0;
             timer.restart();
-            if (i >= 256 + sizeof(strings) / sizeof(*strings))
-                start_value = 0;
         }
-        window.draw(text);
+
+        else if (start_value < 5 && i >= 256 + int(sizeof(strings) / sizeof(*strings)) - 1)
+            start_value = 5;
+
+        if (start_value == 6 && timer.getElapsedTime().asSeconds() >= 5)
+        {
+            start_value = 7;
+            j = 255;
+            timer.restart();
+        }
+
+        else if (start_value == 7 && timer.getElapsedTime().asMilliseconds() >= 5 && j > 0)
+        {
+            --j;
+            if( j < 255 - 100)
+                fade2.setFillColor(sf::Color(j, j, j, 255 - j));
+            else 
+                fade2.setFillColor(sf::Color(j, j, j, 100));
+            timer.restart();
+        }
+
+        else if (start_value == 7 && j == 0)
+        {
+            timer.restart();
+            i = 255;
+            start_value = 8;
+        }
+
+        if (start_value < 5)
+            window.draw(text);
+
+        else if (start_value >= 5)
+        {
+            window.draw(map);
+            window.draw(fade2);
+            if (start_value == 5)
+            {
+                timer.restart();
+                start_value++;
+            }
+
+
+        }
+        
     }
+
+    else if (start_value == 8)
+    {
+        if (timer.getElapsedTime().asMilliseconds() >= 10 && i > 0) {
+            --i;
+            fade.setFillColor(sf::Color(0, 0, 0, i));
+            timer.restart();
+        }
+
+        else if (i == 0)
+            start_value = 0;
+    }
+
+    
 
 }
