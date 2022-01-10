@@ -28,7 +28,7 @@ public:
     };
     Stats stats;
     std::string items_n[6] ={ "Mala apteczka","Duza apteczka","Jablko","Pistolet","Butelka","Noz" };
-    int items_v[6] = { 0,0,0,0,0,0 };
+    int items_v[6] = { 1,0,2,0,0,1 };
     Character(const character_type& values, const int& map_lvl);
     void player_move(bool* isMoving, sf::Clock& timer);
 
