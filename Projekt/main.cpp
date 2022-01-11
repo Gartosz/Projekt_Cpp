@@ -1,4 +1,4 @@
-﻿#include <ctime>
+#include <ctime>
 #include <stdlib.h>
 #include <iostream>
 #include <Windows.h>
@@ -7,23 +7,26 @@
 #include "main.h"
 #include <string>
 #include <filesystem>
+#include <io.h>
+#include <fcntl.h>
 
 int main()
 {
 #define strzalka_up 72
 #define strzalka_down 80
 #define enter 13
+_setmode(_fileno(stdout), _O_U16TEXT);
 	int k[5] = { 33,0,0,0,0 }, co = 1, klawisz = 0, p = 0, c = 0, j = 0;
 	std::string opis = "Gra";
 	while (p == 0)
 	{
 		c = 0;
 		system("cls");
-		std::cout << "\x1b[" << k[0] << "m1. Zacznij nowa gre\n";
-		std::cout << "\x1b[" << k[1] << "m2. Kontynuuj gre\n";
-		std::cout << "\x1b[" << k[2] << "m3. Wczytaj gre\n";
-		std::cout << "\x1b[" << k[3] << "m4. Opis\n\x1b[0m";
-		std::cout << "\x1b[" << k[4] << "m5. Wyjscie\n\x1b[0m";
+		std::wcout << "\x1b[" << k[0] << L"m1. Zacznij nową grę\n";
+		std::wcout << "\x1b[" << k[1] << L"m2. Kontynuuj grę\n";
+		std::wcout << "\x1b[" << k[2] << L"m3. Wczytaj grę\n";
+		std::wcout << "\x1b[" << k[3] << "m4. Opis\n\x1b[0m";
+		std::wcout << "\x1b[" << k[4] << L"m5. Wyjście\n\x1b[0m";
 		c = _getch();
 		switch (c)
 		{
@@ -69,7 +72,7 @@ int main()
 	case 3:
 		while (1)
 		{
-			std::cout << "Podaj nazwe pliku: ";
+			std::wcout << L"Podaj nazwę pliku: ";
 			std::cin >> filename;
 			if (filename.substr(filename.size() - 5, 4) != ".txt")
 				filename += ".txt";
@@ -78,7 +81,7 @@ int main()
 			if (std::filesystem::exists(filename))
 				break;
 			else
-				std::cout << "Brak pliku!\n";
+				std::wcout << "Brak pliku!\n";
 		}
 		game(0, filename);
 		break;
@@ -87,14 +90,14 @@ int main()
 		system("cls");
 		for (int i = 0; i < opis.length(); i++)
 		{
-			std::cout << opis[i];
+			std::wcout << opis[i];
 			Sleep(30);
 		}
 		c = _getch();
 		return main();
 		break;
 	case 5:
-		std::cout << "Do zobaczenia :)";
+		std::wcout << "Do zobaczenia :)";
 		Sleep(2000);
 		return 0;
 		break;
