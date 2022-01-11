@@ -34,7 +34,7 @@ int escape_menu(sf::RenderWindow& window, sf::RectangleShape& gui, bool& menu_op
     static sf::Clock t;
     float wait_time = 0.2;
     sf::Text menu_text[4];
-    std::wstring menu_string[4] = { L"Wzn�w", L"Zapisz", L"Wyjdź do menu głównego", L"Wyjdź do pulpitu"};
+    std::wstring menu_string[4] = { L"Wznów", L"Zapisz", L"Wyjdź do menu głównego", L"Wyjdź do pulpitu"};
 
     if (menu)
     {
