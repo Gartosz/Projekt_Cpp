@@ -1,4 +1,4 @@
-﻿#include <SFML/Graphics.hpp>
+#include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <iostream>
 #include "Character.h"
@@ -6,12 +6,13 @@
 #include "main.h"
 #include <math.h>
 #include <vector>
+#include "Scenes.h"
 #include "Item.h"
 
 
 #define K sf::Keyboard
 
-void Event(sf::RenderWindow& window, K::Key* Keys, bool* isMoving, bool& choose, bool& menu_open, bool& menu, bool& stats_open, bool& eq)
+void Event(sf::RenderWindow& window, const K::Key* Keys, bool* isMoving, bool& choose, bool& menu_open, bool& menu, bool& stats_open, bool& eq)
 {
     sf::Event event;
     static bool escape_release = true;
@@ -313,16 +314,16 @@ bool enemy_player_contact(sf::Sprite& player, sf::Sprite& enemy)
     return false;
 }
 
-int game(int new_start, const std::string& filename = "")
+int game(int new_start, const std::string &filename = "")
 {
     const int w = 1000, h = 700;
     bool isMoving[4] = { false, false, false, false };
-    bool choose = false, menu = true, normal_state = true, menu_open = false, stats_open = false,eq=false;
+    bool choose = false, menu = true, normal_state = true, menu_open = false, stats_open = false,eq = false;
     K::Key Keys[8] = { K::W,K::Up,K::S,K::Down,K::D,K::Right,K::A,K::Left };
     sf::RenderWindow window(sf::VideoMode(w, h), "Nasza gra 2D");
 
     sf::Font font;
-    font.loadFromFile("Textures/BitPap.ttf");
+    font.loadFromFile("Textures/HannoverMesseSans-dewK.ttf");
 
     sf::RectangleShape gui(sf::Vector2f(window.getSize()));
     gui.setFillColor(sf::Color(0, 0, 0, 255));
@@ -336,7 +337,7 @@ int game(int new_start, const std::string& filename = "")
 
     for (int i = 0; i < sizeof(struct_types) / sizeof(*struct_types); i++)
     {
-        Enemies.push_back(std::unique_ptr<Character>(new Character(Enemies_type[struct_types[i]], 0)));
+        Enemies.push_back(std::unique_ptr<Character>(new Character(Enemies_type[struct_types[i]], 5)));
     }
 
     int lvli = 0;
@@ -345,7 +346,7 @@ int game(int new_start, const std::string& filename = "")
     (*Enemies[1]).sprite.setPosition(200, 500);
     (*Enemies[2]).sprite.setPosition(600, 300);
 
-    Character Player(Player_type, 0);
+    Character Player(Player_type, lvli);
 
     if (filename == "")
         Player.sprite.setPosition(785, 231);
@@ -435,10 +436,9 @@ int game(int new_start, const std::string& filename = "")
     bool nozi=true;
     while (window.isOpen())
     {
-
-        Event(window, Keys, isMoving, choose, menu_open, menu, stats_open,eq);
         window.clear();
-        //std::cout << Player.sprite.getPosition().x<<"  "<< Player.sprite.getPosition().y<<'\n';
+        Event(window, Keys, isMoving, choose, menu_open, menu, stats_open,eq);
+
         switch (lvli)
         {
         case 0:
@@ -520,6 +520,12 @@ int game(int new_start, const std::string& filename = "")
                 nozi = false;
             }
             lvl4col(Player.sprite);
+            if (new_start && Player.sprite.getPosition().x >= 250)
+            {
+                normal_state = false;
+                window.draw(Player.sprite);
+                bunker(window, font, new_start, lvl6);
+            }
             break;
         case 4:
             window.draw(lvl5);
@@ -585,7 +591,7 @@ int game(int new_start, const std::string& filename = "")
         if (Player.Health == 0 and !menu_open)
         {
             window.draw(gui);
-            sf::Text death("SMIERC!", font, 100);
+            sf::Text death(L"ŚMIERĆ!", font, 100);
             death.setFillColor(sf::Color::Red);
             death.setPosition(w / 2 - death.getGlobalBounds().width / 2, h / 2 - death.getGlobalBounds().height / 2);
             window.draw(death);
@@ -607,6 +613,10 @@ int game(int new_start, const std::string& filename = "")
             Player.player_move(isMoving, timer);
             window.draw(Player.sprite);
         }
+
+        if (new_start && new_start < 3)
+            new_game(window, font, new_start);
+            
         window.display();
         normal_state = true;
 
