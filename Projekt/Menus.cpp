@@ -34,7 +34,7 @@ int escape_menu(sf::RenderWindow& window, sf::RectangleShape& gui, bool& menu_op
     static sf::Clock t;
     float wait_time = 0.2;
     sf::Text menu_text[4];
-    std::wstring menu_string[4] = { L"Wznów", L"Zapisz", L"WyjdŸ do menu g³ównego", L"WyjdŸ do pulpitu"};
+    std::wstring menu_string[4] = { L"WznÃ³w", L"Zapisz", L"WyjdÅº do menu gÅ‚Ã³wnego", L"WyjdÅº do pulpitu"};
 
     if (menu)
     {
@@ -55,11 +55,8 @@ int escape_menu(sf::RenderWindow& window, sf::RectangleShape& gui, bool& menu_op
         t.restart();
     }
 
-    
-
     if (i > int(sizeof(menu_text) / sizeof(*menu_text)) - 1)
         i = 0;
-        
     else if (i < 0)
         i = int(sizeof(menu_text) / sizeof(*menu_text)) - 1;
 
@@ -105,7 +102,7 @@ void fight_menu(sf::RenderWindow& window, Character& player, Character& enemy, s
     sf::Text player_hp;
     sf::Text enemy_hp;
     sf::Text menu_text[4];
-    std::wstring menu_string[4] = { L"Atak", L"Ekwipunek", L"Pomiñ turê", L"Ucieknij" };
+    std::wstring menu_string[4] = { L"Atak", L"Ekwipunek", L"PomiÅ„ turÄ™", L"Ucieknij" };
 
     player_hp.setFont(font);
     player_hp.setPosition(0, 0);
@@ -407,17 +404,17 @@ void ekwipunek(sf::RenderWindow& window, Character& player, sf::RectangleShape& 
                 {
                 case 0:
                     player.items_v[i]--;
-                    player.Health += round(player.Health * 0.15);
+                    player.Health += round(player.stats.max_health * 0.15);
                     if (player.Health > player.stats.max_health)player.Health = player.stats.max_health;
                     break;
                 case 1:
                     player.items_v[i]--;
-                    player.Health += round(player.Health * 0.3);
+                    player.Health += round(player.stats.max_health * 0.3);
                     if (player.Health > player.stats.max_health)player.Health = player.stats.max_health;
                     break;
                 case 2:
                     player.items_v[i]--;
-                    player.Health += round(player.Health * 0.05);
+                    player.Health += round(player.stats.max_health * 0.05);
                     if (player.Health > player.stats.max_health)player.Health = player.stats.max_health;
                     break;
                 case 3:

@@ -1,4 +1,4 @@
-﻿#include <ctime>
+#include <ctime>
 #include <stdlib.h>
 #include <iostream>
 #include <Windows.h>
@@ -15,7 +15,7 @@ int main()
 #define strzalka_up 72
 #define strzalka_down 80
 #define enter 13
-	_setmode(_fileno(stdout), _O_U16TEXT);
+_setmode(_fileno(stdout), _O_U16TEXT);
 	int k[5] = { 33,0,0,0,0 }, co = 1, klawisz = 0, p = 0, c = 0, j = 0;
 	std::string opis = "Gra";
 	while (p == 0)
@@ -73,7 +73,6 @@ int main()
 		while (1)
 		{
 			std::wcout << L"Podaj nazwę pliku: ";
-
 			std::cin >> filename;
 			if (filename.substr(filename.size() - 5, 4) != ".txt")
 				filename += ".txt";
