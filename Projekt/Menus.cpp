@@ -1,4 +1,4 @@
-#include <SFML/Graphics.hpp>
+﻿#include <SFML/Graphics.hpp>
 #include "Menus.h"
 #include "Character.h"
 #include "main.h"
@@ -57,6 +57,7 @@ int escape_menu(sf::RenderWindow& window, sf::RectangleShape& gui, bool& menu_op
 
     if (i > int(sizeof(menu_text) / sizeof(*menu_text)) - 1)
         i = 0;
+        
     else if (i < 0)
         i = int(sizeof(menu_text) / sizeof(*menu_text)) - 1;
 
@@ -92,7 +93,6 @@ int escape_menu(sf::RenderWindow& window, sf::RectangleShape& gui, bool& menu_op
 
 
 }
-
 void fight_menu(sf::RenderWindow& window, Character& player, Character& enemy, sf::RectangleShape& gui, bool* move_menu, bool& choose, sf::CircleShape& option, bool& menu, sf::Font const& font)
 {
     float wait_time = 0.2;
@@ -229,7 +229,7 @@ void stats_menu(sf::RenderWindow& window, Character& player, sf::RectangleShape&
     static sf::Clock t;
     float wait_time = 0.2;
     sf::Text menu_text[11];
-    std::string menu_string[11] = { "Maksymalne zdrowie: " + std::to_string(player.stats.max_health), "Atak: " + std::to_string(player.stats.attack), "Celnosc: " + std::to_string(player.stats.accuracy), "Inteligencja: " + std::to_string(player.stats.intelligence), "Dostepne punkty doswiadczenia: " + std::to_string(player.stats.experience),"Statystyki postaci:      Poziom:", "Aktualne zdrowie: " + std::to_string(player.Health).substr(0, int(log10(abs(player.Health))) + 4), std::to_string(player.stats.lvl[0]), std::to_string(player.stats.lvl[1]), std::to_string(player.stats.lvl[2]), std::to_string(player.stats.lvl[3]) };
+    std::wstring menu_string[11] = { L"Maksymalne zdrowie: " + std::to_wstring(player.stats.max_health), L"Atak: " + std::to_wstring(player.stats.attack), L"Celność: " + std::to_wstring(player.stats.accuracy), L"Inteligencja: " + std::to_wstring(player.stats.intelligence), L"Dostępne punkty doświadczenia: " + std::to_wstring(player.stats.experience),L"Statystyki postaci:      Poziom:", L"Aktualne zdrowie: " + std::to_wstring(player.Health).substr(0, int(log10(abs(player.Health))) + 4), std::to_wstring(player.stats.lvl[0]), std::to_wstring(player.stats.lvl[1]), std::to_wstring(player.stats.lvl[2]), std::to_wstring(player.stats.lvl[3]) };
     int lvl_up_values[4] = { 10,5,5,5 };
     int max_lvl_up[4] = { 300 / lvl_up_values[0] - player.stats.max_health / lvl_up_values[0], 120 / lvl_up_values[1] - player.stats.attack / lvl_up_values[1], 100 / lvl_up_values[2] - player.stats.accuracy / lvl_up_values[2], 40 / lvl_up_values[3] - player.stats.intelligence / lvl_up_values[3] };
 
@@ -307,9 +307,9 @@ void stats_menu(sf::RenderWindow& window, Character& player, sf::RectangleShape&
                 player.stats.lvl[i] ++;
             }
             else if (max_lvl_up[i] == 0)
-                message.setString("Nie mozna bardziej ulepszyc\nwybranej statystyki!");
+                message.setString(L"Nie można bardziej ulepszyć\nwybranej statystyki!");
             else
-                message.setString("Brakuje ci punktow doswiadczenia!");
+                message.setString(L"Brakuje ci punktów doświadczenia!");
 
             if (message.getString() != "")
             {
@@ -330,7 +330,7 @@ void stats_menu(sf::RenderWindow& window, Character& player, sf::RectangleShape&
     window.draw(option);
     window.draw(message_bg);
     window.draw(message);
-    std::cout << i << std::endl;
+
     player.sprite.setPosition(pos);
 }
 void ekwipunek(sf::RenderWindow& window, Character& player, sf::RectangleShape& gui, bool* move_menu, bool& choose, sf::CircleShape& option, bool& menu, sf::Font const& font)

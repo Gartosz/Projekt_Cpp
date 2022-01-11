@@ -1,5 +1,4 @@
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
+﻿#include <SFML/Graphics.hpp>
 #include <iostream>
 #include "Character.h"
 #include "Menus.h"
@@ -205,7 +204,7 @@ void lvl6col(sf::Sprite& a)
     if (a.getPosition().x < 764 && a.getPosition().x>760 && a.getPosition().y < 21 && a.getPosition().y>9)a.setPosition(764, a.getPosition().y);
     if (a.getPosition().x < 764 && a.getPosition().x>668 && a.getPosition().y > 9 && a.getPosition().y < 13)a.setPosition(a.getPosition().x, 9);
     if (a.getPosition().x > 665 && a.getPosition().x < 669 && a.getPosition().y>9 && a.getPosition().y <= 57)a.setPosition(665, a.getPosition().y);
-    if (a.getPosition().x > 642 && a.getPosition().x <= 665 && a.getPosition().y>54 && a.getPosition().y < 58)a.setPosition(a.getPosition().x, 54);
+    if (a.getPosition().x > 642 && a.getPosition().x <= 665 && a.getPosition().y > 54 && a.getPosition().y < 58)a.setPosition(a.getPosition().x, 54);
     if (a.getPosition().x > 642 && a.getPosition().x < 646 && a.getPosition().y > 54 && a.getPosition().y < 240)a.setPosition(642, a.getPosition().y);
     if (a.getPosition().x > 642 && a.getPosition().y < 240 && a.getPosition().y>236)a.setPosition(a.getPosition().x, 240);
 }
@@ -220,85 +219,7 @@ void lvl7col(sf::Sprite& a)
     //kolizja prawej sciany
     if (a.getPosition().x > 920)a.setPosition(920, a.getPosition().y);
 }
-int new_game(sf::RenderWindow& window, sf::Sprite const& startmapbackground, sf::Sprite const& main_ch, sf::Font const& font)
-{
-    sf::RectangleShape fade(sf::Vector2f(window.getSize()));
-    fade.setFillColor(sf::Color(0, 0, 0, 255));
 
-    sf::SoundBuffer buffer;
-    if (!buffer.loadFromFile("siren.wav"))
-        return -1;
-
-    sf::Text new_game("Byl zwykly niedzielny poranek. \nSpisz w najlepsze, gdy nagle...", font, 40);
-    new_game.setPosition(150, 200);
-
-    sf::Clock timer;
-
-    sf::Sound sound;
-    sound.setVolume(10);
-    sound.setBuffer(buffer);
-
-    int i = 255;
-    bool s = false;
-    int start = 0;
-
-    while (window.isOpen())
-    {
-        window.draw(startmapbackground);
-        window.draw(main_ch);
-        window.draw(fade);
-
-        switch (start)
-        {
-        case 0:
-            window.draw(new_game);
-
-            if (timer.getElapsedTime().asSeconds() >= 4)
-            {
-                new_game.setString("Budzi Cie dzwiek syreny...");
-                start++;
-                timer.restart();
-            }
-
-            break;
-        case 1:
-            start++;
-            sound.play();
-            break;
-        case 2:
-            if (timer.getElapsedTime().asSeconds() >= 1)
-            {
-                start++;
-                timer.restart();
-            }
-            break;
-        case 3:
-            window.draw(new_game);
-
-            if (timer.getElapsedTime().asSeconds() >= 4)
-            {
-                start++;
-                s = true;
-            }
-            break;
-        default:
-            break;
-        }
-
-        if (s && i > 0)
-        {
-            fade.setFillColor(sf::Color(0, 0, 0, i));
-            if (timer.getElapsedTime().asMilliseconds() >= 20)
-                i--;
-        }
-
-        if (i == 0)
-            break;
-
-        window.display();
-
-    }
-}
 
 bool enemy_player_contact(sf::Sprite& player, sf::Sprite& enemy)
 {
@@ -314,11 +235,11 @@ bool enemy_player_contact(sf::Sprite& player, sf::Sprite& enemy)
     return false;
 }
 
-int game(int new_start, const std::string &filename = "")
+int game(int new_start, const std::string& filename = "")
 {
     const int w = 1000, h = 700;
     bool isMoving[4] = { false, false, false, false };
-    bool choose = false, menu = true, normal_state = true, menu_open = false, stats_open = false,eq = false;
+    bool choose = false, menu = true, normal_state = true, menu_open = false, stats_open = false, eq = false;
     K::Key Keys[8] = { K::W,K::Up,K::S,K::Down,K::D,K::Right,K::A,K::Left };
     sf::RenderWindow window(sf::VideoMode(w, h), "Nasza gra 2D");
 
@@ -341,10 +262,11 @@ int game(int new_start, const std::string &filename = "")
     }
 
     int lvli = 0;
-   
-    (*Enemies[0]).sprite.setPosition(400, 200);
-    (*Enemies[1]).sprite.setPosition(200, 500);
+
+    (*Enemies[0]).sprite.setPosition(400, 60);
+    (*Enemies[1]).sprite.setPosition(550, 500);
     (*Enemies[2]).sprite.setPosition(600, 300);
+    (*Enemies[1]).map_lvl = 3;
 
     Character Player(Player_type, lvli);
 
@@ -406,7 +328,7 @@ int game(int new_start, const std::string &filename = "")
     txti1.loadFromFile("Textures/items/Apteczka_d.png");
     sf::IntRect recti1(5, 2, 155, 157);
     std::vector <sf::Sprite> apteczkid;
-    
+
     std::vector <std::unique_ptr<item>>Apteczka_d;
     for (int i = 0; i < 2; i++)
     {
@@ -428,16 +350,11 @@ int game(int new_start, const std::string &filename = "")
 
     window.setFramerateLimit(60);
 
-    window.display();
-
-    if (new_start)
-        new_game(window, startmapbackground, Player.sprite, font);
-
-    bool nozi=true;
+    bool nozi = true;
     while (window.isOpen())
     {
         window.clear();
-        Event(window, Keys, isMoving, choose, menu_open, menu, stats_open,eq);
+        Event(window, Keys, isMoving, choose, menu_open, menu, stats_open, eq);
 
         switch (lvli)
         {
@@ -484,7 +401,7 @@ int game(int new_start, const std::string &filename = "")
                 {
                     Player.items_v[1]++;
                     Apteczka_d.erase(Apteczka_d.begin() + i);
-                }  
+                }
             }
             for (int i = 0; i < Apteczka_m.size(); i++)
             {
@@ -508,14 +425,14 @@ int game(int new_start, const std::string &filename = "")
                     jablko.erase(jablko.begin() + i);
                 }
             }
-            if(nozi)
+            if (nozi)
             {
                 noz.sprite.setPosition(200, 200);
                 window.draw(noz.sprite);
             }
             if (enemy_player_contact(Player.sprite, noz.sprite) && sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
             {
-                Player.items_v[5]+=1;
+                Player.items_v[5] += 1;
                 noz.sprite.setPosition(-100, -100);
                 nozi = false;
             }
@@ -571,7 +488,7 @@ int game(int new_start, const std::string &filename = "")
         }
         else if (eq)
         {
-            ekwipunek(window, Player,gui,isMoving,choose,option,menu,font);
+            ekwipunek(window, Player, gui, isMoving, choose, option, menu, font);
             normal_state = false;
         }
 
@@ -616,9 +533,10 @@ int game(int new_start, const std::string &filename = "")
 
         if (new_start && new_start < 3)
             new_game(window, font, new_start);
-            
-        window.display();
+
+
         normal_state = true;
+        window.display();
 
 
     }
