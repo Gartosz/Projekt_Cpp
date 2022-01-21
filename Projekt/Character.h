@@ -46,7 +46,7 @@ private:
         return os;
     }
 
-    friend Character& operator<<(Character& x, const std::string& filename) {
+    friend Character& operator<<(Character& x, const std::wstring& filename) {
 
         std::ifstream file(filename);
         int values[13];

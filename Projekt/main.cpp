@@ -15,6 +15,7 @@ int main()
 #define strzalka_up 72
 #define strzalka_down 80
 #define enter 13
+#define escape 27
 	_setmode(_fileno(stdout), _O_U16TEXT);
 	int k[5] = { 33,0,0,0,0 }, co = 1, klawisz = 0, p = 0, c = 0, j = 0;
 	std::string opis = "Gra";
@@ -70,22 +71,59 @@ int main()
 		game(0);
 		break;
 	case 3:
-		while (1)
-		{
-			std::wcout << L"Podaj nazwę pliku: ";
+	{
+		system("cls");
+		std::vector<std::wstring> paths;
+		for (const auto& entry : std::filesystem::directory_iterator("./Saves/"))
+			paths.push_back(entry.path().stem().wstring());
 
-			std::cin >> filename;
-			if (filename.substr(filename.size() - 5, 4) != ".txt")
-				filename += ".txt";
-			if (filename.substr(0, 8) != "./Saves/")
-				filename.insert(0, "./Saves/");
-			if (std::filesystem::exists(filename))
+		std::vector<int> l(paths.size(), 0);
+		l[0] = 33;
+		co = 0, klawisz = 0, p = 0, c = 0, j = 0;
+		std::wstring filename;
+
+		std::wcout << L"Wybierz zapis, lub wróć do menu wciskając Esc.\n";
+
+		while (p == 0)
+		{
+			c = 0;
+			system("cls");
+			for (int n = 0; n < paths.size(); ++n)
+				std::wcout << "\x1b[" << l[n] << L"m" << paths[n] << "\n";
+			c = _getch();
+			switch (c)
+			{
+			case strzalka_up:
+				if (l[0] != 0)
+					break;
+				j--;
+				l[j + 1] = 0;
+				l[j] = 33;
 				break;
-			else
-				std::wcout << "Brak pliku!\n";
+			case strzalka_down:
+				if (l[l.size()-1] != 0)
+					break;
+				j++;
+				l[j - 1] = 0;
+				l[j] = 33;
+				break;
+			case enter:
+				p = 1;
+				co = std::distance(l.begin(), std::find(l.begin(), l.end(), 33));
+				break;
+			case escape:
+				return main();
+			default:
+				break;
+			}
+
 		}
+		
+		filename = L"./Saves/" + paths[co] + L".txt";
+		
 		game(0, filename);
 		break;
+	}
 	case 4:
 		c = 0;
 		system("cls");

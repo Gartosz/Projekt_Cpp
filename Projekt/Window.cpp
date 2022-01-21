@@ -235,7 +235,7 @@ bool enemy_player_contact(sf::Sprite& player, sf::Sprite& enemy)
     return false;
 }
 
-int game(int new_start, const std::string& filename = "")
+int game(int new_start, const std::wstring& filename = L"")
 {
     const int w = 1000, h = 700;
     bool isMoving[4] = { false, false, false, false };
@@ -250,11 +250,11 @@ int game(int new_start, const std::string& filename = "")
     gui.setFillColor(sf::Color(0, 0, 0, 255));
 
     const character_type Player_type = { "Textures/main_character.png", 0.17, {0, 0, 460, 560}, 100, 100, 15, 50, 40 };
-    const character_type Enemies_type[2] = { {"Textures/Enemies/Slime.png", 2, {2, 2, 61, 57}, 50, 50, 10},{ "Textures/Enemies/Manekin.png", 2, {13 , 6, 31, 52}, 30, 0 } };
+    const character_type Enemies_type[4] = { {"Textures/Enemies/Slime.png", 2, {2, 2, 61, 57}, 50, 50, 10}, { "Textures/Enemies/Manekin.png", 2, {13 , 6, 31, 52}, 30, 0 }, { "Textures/Enemies/Kleszcz.png", 2, {25, 2, 45, 64}, 100, 100, 20 }, { "Textures/Enemies/Poczwara.png", 2, {19, 3, 28, 31}, 50, 100, 10 } };
 
     std::vector <std::unique_ptr<Character>> Enemies;
 
-    int struct_types[3] = { 0,1,0 };
+    int struct_types[5] = { 0, 1, 0, 2, 3 };
 
     for (int i = 0; i < sizeof(struct_types) / sizeof(*struct_types); i++)
     {
@@ -266,11 +266,13 @@ int game(int new_start, const std::string& filename = "")
     (*Enemies[0]).sprite.setPosition(400, 60);
     (*Enemies[1]).sprite.setPosition(550, 500);
     (*Enemies[2]).sprite.setPosition(600, 300);
+    (*Enemies[3]).sprite.setPosition(800, 300);
+    (*Enemies[4]).sprite.setPosition(700, 500);
     (*Enemies[1]).map_lvl = 3;
 
     Character Player(Player_type, lvli);
 
-    if (filename == "")
+    if (filename == L"")
         Player.sprite.setPosition(785, 231);
     else
     {
