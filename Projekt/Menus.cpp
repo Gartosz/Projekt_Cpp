@@ -98,6 +98,7 @@ void fight_menu(sf::RenderWindow& window, Character& player, Character& enemy, s
     float wait_time = 0.2;
     static sf::Clock t;
     static int i = 0;
+    static bool blink = false;
     sf::Vector2f const options_positions[4] = { {100,500}, {100,600}, {400,500}, {400,600} };
     sf::Text player_hp;
     sf::Text enemy_hp;
@@ -166,11 +167,14 @@ void fight_menu(sf::RenderWindow& window, Character& player, Character& enemy, s
 
     player.sprite.setPosition(pos[0]);
     enemy.sprite.setPosition(pos[1]);
+
     static bool eq = true;
+
     if (i == 0 && choose && t.getElapsedTime().asSeconds() >= wait_time)
     {
+
         enemy.Health -= player.stats.attack;
-        t.restart();
+
         if (enemy.Health <= 0)
         {
             enemy.sprite.setPosition(-100, -100);
@@ -183,25 +187,33 @@ void fight_menu(sf::RenderWindow& window, Character& player, Character& enemy, s
         }
         else
             player.Health -= enemy.stats.attack;
+        blink = true;
+        player.sprite.setColor(sf::Color(220, 100, 150, 255));
+        enemy.sprite.setColor(sf::Color(220, 100, 150, 255));
 
+        t.restart();
     }
     else if (i == 1 && choose)
     {
-        if(eq){ekwipunek(window, player, gui, move_menu, choose, option, menu, font);}
+        if (eq) { ekwipunek(window, player, gui, move_menu, choose, option, menu, font); }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))eq = false;
-        
-        
+
+
     }
 
     else if (i == 2 && choose && t.getElapsedTime().asSeconds() >= wait_time)
     {
         player.Health -= enemy.stats.attack;
-        t.restart();
+        
         if (player.Health <= 0)
         {
             player.sprite.setPosition(-200, -200);
             player.Health = 0;
         }
+        blink = true;
+        player.sprite.setColor(sf::Color(220, 100, 150, 255));
+
+        t.restart();
     }
 
     else if (i == 3 && choose)
@@ -219,7 +231,18 @@ void fight_menu(sf::RenderWindow& window, Character& player, Character& enemy, s
 
         player.sprite.setPosition(player.sprite.getPosition().x + x, player.sprite.getPosition().y + y);
     }
+
+    if (blink && t.getElapsedTime().asMilliseconds() >= 120)
+    {
+        enemy.sprite.setColor(sf::Color::White);
+        player.sprite.setColor(sf::Color::White);
+        blink = false;
+
+    }
+
 }
+        
+
 
 void stats_menu(sf::RenderWindow& window, Character& player, sf::RectangleShape& gui, bool* move_menu, bool& choose, sf::CircleShape& option, bool& menu, sf::Font const& font)
 {

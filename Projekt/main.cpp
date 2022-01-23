@@ -94,17 +94,19 @@ int main()
 			switch (c)
 			{
 			case strzalka_up:
-				if (l[0] != 0)
-					break;
-				j--;
-				l[j + 1] = 0;
+				l[j] = 0;
+				if (j == 0)
+					j = paths.size() - 1;			
+				else
+					j--;
 				l[j] = 33;
 				break;
 			case strzalka_down:
-				if (l[l.size()-1] != 0)
-					break;
-				j++;
-				l[j - 1] = 0;
+				l[j] = 0;
+				if (j == paths.size() - 1)
+					j = 0;
+				else
+					j++;
 				l[j] = 33;
 				break;
 			case enter:

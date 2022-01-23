@@ -250,11 +250,11 @@ int game(int new_start, const std::wstring& filename = L"")
     gui.setFillColor(sf::Color(0, 0, 0, 255));
 
     const character_type Player_type = { "Textures/main_character.png", 0.17, {0, 0, 460, 560}, 100, 100, 15, 50, 40 };
-    const character_type Enemies_type[4] = { {"Textures/Enemies/Slime.png", 2, {2, 2, 61, 57}, 50, 50, 10}, { "Textures/Enemies/Manekin.png", 2, {13 , 6, 31, 52}, 30, 0 }, { "Textures/Enemies/Kleszcz.png", 2, {25, 2, 45, 64}, 100, 100, 20 }, { "Textures/Enemies/Poczwara.png", 2, {19, 3, 28, 31}, 50, 100, 10 } };
+    const character_type Enemies_type[6] = { { "Textures/Enemies/Manekin.png", 2, {13 , 6, 31, 52}, 30, 0 }, {"Textures/Enemies/Slime.png", 2, {2, 2, 61, 57}, 50, 50, 10}, { "Textures/Enemies/Kleszcz.png", 2, {25, 2, 45, 64}, 100, 100, 20 }, { "Textures/Enemies/Poczwara.png", 2, {19, 3, 28, 31}, 50, 100, 10 }, { "Textures/Enemies/Kot.png", 2, {15, 12, 51, 21}, 100, 100, 20 }, { "Textures/Enemies/Nietoperz.png", 2, {9, 17, 44, 43}, 50, 100, 10 } };
 
     std::vector <std::unique_ptr<Character>> Enemies;
 
-    int struct_types[5] = { 0, 1, 0, 2, 3 };
+    int struct_types[7] = { 0, 1, 1, 2, 3, 4, 5 };
 
     for (int i = 0; i < sizeof(struct_types) / sizeof(*struct_types); i++)
     {
@@ -263,12 +263,16 @@ int game(int new_start, const std::wstring& filename = L"")
 
     int lvli = 0;
 
-    (*Enemies[0]).sprite.setPosition(400, 60);
-    (*Enemies[1]).sprite.setPosition(550, 500);
+    (*Enemies[0]).sprite.setPosition(550, 500);
+    (*Enemies[1]).sprite.setPosition(400, 60);
     (*Enemies[2]).sprite.setPosition(600, 300);
     (*Enemies[3]).sprite.setPosition(800, 300);
     (*Enemies[4]).sprite.setPosition(700, 500);
-    (*Enemies[1]).map_lvl = 3;
+    (*Enemies[5]).sprite.setPosition(200, 300);
+    (*Enemies[6]).sprite.setPosition(700, 500);
+    (*Enemies[0]).map_lvl = 3;
+    (*Enemies[5]).map_lvl = 6;
+    (*Enemies[6]).map_lvl = 6;
 
     Character Player(Player_type, lvli);
 
@@ -443,6 +447,7 @@ int game(int new_start, const std::wstring& filename = L"")
             {
                 normal_state = false;
                 window.draw(Player.sprite);
+                window.draw((*Enemies[0]).sprite);
                 bunker(window, font, new_start, lvl6);
             }
             break;
@@ -518,6 +523,7 @@ int game(int new_start, const std::wstring& filename = L"")
 
         else if (normal_state)
         {
+            Player.sprite.setColor(sf::Color::White);
             for (int i = 0; i < Enemies.size(); i++)
             {
                 if ((*Enemies[i]).Health == 0)
