@@ -5,13 +5,13 @@ struct character_type {
     std::string txt_patch;
     float scale;
     int size[4];
-    float Health;
-    int max_health = Health;
+    int Health = 10;
+    int experience = 2;
     int attack = 0;
     int accuracy = 0;
     int intelligence = 0;
-    int lvl[4] = { 0,0,0,0 };
-    int experience = 2;
+    int max_health = Health;
+    int lvl[4] = { 0,0,0,0 }; 
 };
 
 class Character {

@@ -1,28 +1,8 @@
-﻿  Menus.cpp
-F:\Projekt C++\Gra 2D\Projekt C++\Character.h(9,22): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+﻿  Window.cpp
 F:\Projekt C++\Gra 2D\Projekt C++\Character.h(59,49): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 F:\Projekt C++\Gra 2D\Projekt C++\Character.h(59,38): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 F:\Projekt C++\Gra 2D\Projekt C++\Character.h(60,28): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-F:\Projekt C++\Gra 2D\Projekt C++\Menus.cpp(35,26): warning C4305: 'initializing': truncation from 'double' to 'float'
-F:\Projekt C++\Gra 2D\Projekt C++\Menus.cpp(98,26): warning C4305: 'initializing': truncation from 'double' to 'float'
-F:\Projekt C++\Gra 2D\Projekt C++\Menus.cpp(253,26): warning C4305: 'initializing': truncation from 'double' to 'float'
-F:\Projekt C++\Gra 2D\Projekt C++\Menus.cpp(366,26): warning C4305: 'initializing': truncation from 'double' to 'float'
-F:\Projekt C++\Gra 2D\Projekt C++\Menus.cpp(376,36): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-F:\Projekt C++\Gra 2D\Projekt C++\Menus.cpp(376,31): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-F:\Projekt C++\Gra 2D\Projekt C++\Menus.cpp(383,32): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-F:\Projekt C++\Gra 2D\Projekt C++\Menus.cpp(383,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-F:\Projekt C++\Gra 2D\Projekt C++\Menus.cpp(430,75): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-F:\Projekt C++\Gra 2D\Projekt C++\Menus.cpp(431,93): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-F:\Projekt C++\Gra 2D\Projekt C++\Menus.cpp(435,74): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-F:\Projekt C++\Gra 2D\Projekt C++\Menus.cpp(436,93): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-F:\Projekt C++\Gra 2D\Projekt C++\Menus.cpp(440,75): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-F:\Projekt C++\Gra 2D\Projekt C++\Menus.cpp(441,93): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-  Window.cpp
-F:\Projekt C++\Gra 2D\Projekt C++\Character.h(9,22): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-F:\Projekt C++\Gra 2D\Projekt C++\Character.h(59,49): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-F:\Projekt C++\Gra 2D\Projekt C++\Character.h(59,38): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-F:\Projekt C++\Gra 2D\Projekt C++\Character.h(60,28): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-F:\Projekt C++\Gra 2D\Projekt C++\Window.cpp(252,118): warning C4305: 'initializing': truncation from 'double' to 'float'
+F:\Projekt C++\Gra 2D\Projekt C++\Window.cpp(252,121): warning C4305: 'initializing': truncation from 'double' to 'float'
 F:\Projekt C++\Gra 2D\Projekt C++\Window.cpp(295,50): warning C4305: 'argument': truncation from 'double' to 'float'
 F:\Projekt C++\Gra 2D\Projekt C++\Window.cpp(301,36): warning C4305: 'argument': truncation from 'double' to 'float'
 F:\Projekt C++\Gra 2D\Projekt C++\Window.cpp(307,36): warning C4305: 'argument': truncation from 'double' to 'float'

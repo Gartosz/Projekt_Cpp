@@ -249,8 +249,8 @@ int game(int new_start, const std::wstring& filename = L"")
     sf::RectangleShape gui(sf::Vector2f(window.getSize()));
     gui.setFillColor(sf::Color(0, 0, 0, 255));
 
-    const character_type Player_type = { "Textures/main_character.png", 0.17, {0, 0, 460, 560}, 100, 100, 15, 50, 40 };
-    const character_type Enemies_type[6] = { { "Textures/Enemies/Manekin.png", 2, {13 , 6, 31, 52}, 30, 0 }, {"Textures/Enemies/Slime.png", 2, {2, 2, 61, 57}, 50, 50, 10}, { "Textures/Enemies/Kleszcz.png", 2, {25, 2, 45, 64}, 100, 100, 20 }, { "Textures/Enemies/Poczwara.png", 2, {19, 3, 28, 31}, 50, 100, 10 }, { "Textures/Enemies/Kot.png", 2, {15, 12, 51, 21}, 100, 100, 20 }, { "Textures/Enemies/Nietoperz.png", 2, {9, 17, 44, 43}, 50, 100, 10 } };
+    const character_type Player_type = { "Textures/main_character.png", 0.17, {0, 0, 460, 560}, 100, 2, 15, 50, 40, 100 };
+    const character_type Enemies_type[6] = { { "Textures/Enemies/Manekin.png", 2, {13 , 6, 31, 52}, 30, 1, 0 }, {"Textures/Enemies/Slime.png", 2, {2, 2, 61, 57}, 50, 2, 10}, { "Textures/Enemies/Kleszcz.png", 2, {25, 2, 45, 64}, 100, 2, 20 }, { "Textures/Enemies/Poczwara.png", 2, {19, 3, 28, 31}, 50, 3, 10 }, { "Textures/Enemies/Kot.png", 2, {15, 12, 51, 21}, 100, 3, 20 }, { "Textures/Enemies/Nietoperz.png", 2, {9, 17, 44, 43}, 50, 3, 10 } };
 
     std::vector <std::unique_ptr<Character>> Enemies;
 
@@ -528,6 +528,7 @@ int game(int new_start, const std::wstring& filename = L"")
             {
                 if ((*Enemies[i]).Health == 0)
                 {
+                    Player.stats.experience += (*Enemies[i]).stats.experience;
                     Enemies.erase(Enemies.begin() + i);
                     i--;
                 }
