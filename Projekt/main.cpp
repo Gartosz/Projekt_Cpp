@@ -26,7 +26,7 @@ int main()
 		std::wcout << "\x1b[" << k[0] << L"m1. Zacznij nową grę\n";
 		std::wcout << "\x1b[" << k[1] << L"m2. Kontynuuj grę\n";
 		std::wcout << "\x1b[" << k[2] << L"m3. Wczytaj grę\n";
-		std::wcout << "\x1b[" << k[3] << "m4. Opis\n\x1b[0m";
+		std::wcout << "\x1b[" << k[3] << "m4. Opis\n";
 		std::wcout << "\x1b[" << k[4] << L"m5. Wyjście\n\x1b[0m";
 		c = _getch();
 		switch (c)
@@ -68,8 +68,29 @@ int main()
 		game(1);
 		break;
 	case 2:
-		game(0);
+	{
+		if (!std::filesystem::is_empty("./Saves/"))
+		{
+			std::filesystem::path filename = "";
+			for (const auto& entry : std::filesystem::directory_iterator("./Saves/"))
+			{
+
+				std::filesystem::path p = entry.path();
+				if (filename == "")
+					filename = p;
+				if (is_regular_file(p) && p.extension() == ".txt")
+				{
+					if (std::filesystem::last_write_time(p) > std::filesystem::last_write_time(filename))
+						filename = p;
+				}
+			}
+
+			game(0, filename.wstring());
+		}
+		else
+			return main();
 		break;
+	}
 	case 3:
 	{
 		system("cls");

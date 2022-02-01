@@ -1,11 +1,22 @@
-﻿  Scenes.cpp
-C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Scenes.cpp(113,33): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Scenes.cpp(113,122): warning C4018: '<=': signed/unsigned mismatch
-C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Scenes.cpp(117,112): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
-          with
-          [
-              T=unsigned int
-          ]
-C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Scenes.cpp(123,77): warning C4018: '>=': signed/unsigned mismatch
-C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Scenes.cpp(77): warning C4715: 'new_game': not all control paths return a value
-  Projekt C++.vcxproj -> C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Debug\Projekt C++.exe
+﻿  Window.cpp
+C:\Projekt c++\Projekt_Cpp\Projekt\Character.h(59,49): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+C:\Projekt c++\Projekt_Cpp\Projekt\Character.h(59,38): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+C:\Projekt c++\Projekt_Cpp\Projekt\Character.h(60,28): warning C4244: "=": konwersja z "int" do "float", możliwa utrata danych
+C:\Projekt c++\Projekt_Cpp\Projekt\Window.cpp(250,15): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
+C:\Projekt c++\Projekt_Cpp\Projekt\Window.cpp(260,121): warning C4305: "inicjowanie": obcięcie z "double" do "float"
+C:\Projekt c++\Projekt_Cpp\Projekt\Window.cpp(303,50): warning C4305: "argument": obcięcie z "double" do "float"
+C:\Projekt c++\Projekt_Cpp\Projekt\Window.cpp(309,36): warning C4305: "argument": obcięcie z "double" do "float"
+C:\Projekt c++\Projekt_Cpp\Projekt\Window.cpp(315,36): warning C4305: "argument": obcięcie z "double" do "float"
+C:\Projekt c++\Projekt_Cpp\Projekt\Window.cpp(321,36): warning C4305: "argument": obcięcie z "double" do "float"
+C:\Projekt c++\Projekt_Cpp\Projekt\Window.cpp(327,36): warning C4305: "argument": obcięcie z "double" do "float"
+C:\Projekt c++\Projekt_Cpp\Projekt\Window.cpp(333,36): warning C4305: "argument": obcięcie z "double" do "float"
+C:\Projekt c++\Projekt_Cpp\Projekt\Window.cpp(339,36): warning C4305: "argument": obcięcie z "double" do "float"
+C:\Projekt c++\Projekt_Cpp\Projekt\Window.cpp(411,31): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+C:\Projekt c++\Projekt_Cpp\Projekt\Window.cpp(421,31): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+C:\Projekt c++\Projekt_Cpp\Projekt\Window.cpp(432,31): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+C:\Projekt c++\Projekt_Cpp\Projekt\Window.cpp(513,31): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+C:\Projekt c++\Projekt_Cpp\Projekt\Window.cpp(536,31): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+C:\Projekt c++\Projekt_Cpp\Projekt\Window.cpp(569,103): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+C:\Projekt c++\Projekt_Cpp\Projekt\Window.cpp(569,41): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+C:\Projekt c++\Projekt_Cpp\Projekt\Window.cpp(570,35): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+  Projekt C++.vcxproj -> C:\Projekt c++\Projekt_Cpp\Projekt\Debug\Projekt C++.exe

@@ -7,6 +7,8 @@
 #include <vector>
 #include "Scenes.h"
 #include "Item.h"
+#include <cstdlib>
+#include <ctime>
 
 
 #define K sf::Keyboard
@@ -83,6 +85,7 @@ void Event(sf::RenderWindow& window, const K::Key* Keys, bool* isMoving, bool& c
 
         if (event.type == sf::Event::KeyReleased && event.key.code == K::Tab)
             tab_release = true;
+
         if (event.type == sf::Event::KeyReleased && event.key.code == K::I)
             i_release = true;
 
@@ -241,6 +244,11 @@ int game(int new_start, const std::wstring& filename = L"")
     bool isMoving[4] = { false, false, false, false };
     bool choose = false, menu = true, normal_state = true, menu_open = false, stats_open = false, eq = false;
     K::Key Keys[8] = { K::W,K::Up,K::S,K::Down,K::D,K::Right,K::A,K::Left };
+    int count = 0;
+    sf::Clock respawn_timer;
+
+    srand(time(NULL));
+
     sf::RenderWindow window(sf::VideoMode(w, h), "Nasza gra 2D");
 
     sf::Font font;
@@ -249,8 +257,8 @@ int game(int new_start, const std::wstring& filename = L"")
     sf::RectangleShape gui(sf::Vector2f(window.getSize()));
     gui.setFillColor(sf::Color(0, 0, 0, 255));
 
-    const character_type Player_type = { "Textures/main_character.png", 0.17, {0, 0, 460, 560}, 100, 2, 15, 50, 40, 100 };
-    const character_type Enemies_type[6] = { { "Textures/Enemies/Manekin.png", 2, {13 , 6, 31, 52}, 30, 1, 0 }, {"Textures/Enemies/Slime.png", 2, {2, 2, 61, 57}, 50, 2, 10}, { "Textures/Enemies/Kleszcz.png", 2, {25, 2, 45, 64}, 100, 2, 20 }, { "Textures/Enemies/Poczwara.png", 2, {19, 3, 28, 31}, 50, 3, 10 }, { "Textures/Enemies/Kot.png", 2, {15, 12, 51, 21}, 100, 3, 20 }, { "Textures/Enemies/Nietoperz.png", 2, {9, 17, 44, 43}, 50, 3, 10 } };
+    const character_type Player_type = { "Textures/main_character.png", 0.17, {0, 0, 460, 560}, 100, 2, 15, 60, 40, 100 };
+    const character_type Enemies_type[6] = { { "Textures/Enemies/Manekin.png", 2, {13 , 6, 31, 52}, 30, 1, 0 }, {"Textures/Enemies/Slime.png", 2, {2, 2, 61, 57}, 50, 2, 10, 80}, { "Textures/Enemies/Kleszcz.png", 2, {25, 2, 45, 64}, 100, 2, 20, 85}, { "Textures/Enemies/Poczwara.png", 2, {19, 3, 28, 31}, 120, 3, 8, 75}, { "Textures/Enemies/Kot.png", 2, {15, 12, 51, 21}, 100, 3, 25, 100 }, { "Textures/Enemies/Nietoperz.png", 2, {9, 17, 44, 43}, 55, 3, 30, 95 } };
 
     std::vector <std::unique_ptr<Character>> Enemies;
 
@@ -359,6 +367,7 @@ int game(int new_start, const std::wstring& filename = L"")
     bool nozi = true;
     while (window.isOpen())
     {
+        count = 0;
         window.clear();
         Event(window, Keys, isMoving, choose, menu_open, menu, stats_open, eq);
 
@@ -534,6 +543,8 @@ int game(int new_start, const std::wstring& filename = L"")
                 }
                 else if ((*Enemies[i]).map_lvl == lvli)
                     window.draw((*Enemies[i]).sprite);
+                if (i >= 0 && (*Enemies[i]).map_lvl == 6)
+                    count++;
             }
             menu = true;
             Player.player_move(isMoving, timer);
@@ -543,6 +554,32 @@ int game(int new_start, const std::wstring& filename = L"")
         if (new_start && new_start < 3)
             new_game(window, font, new_start);
 
+        if (count < 4 && respawn_timer.getElapsedTime().asSeconds() >= 35)
+        {
+            respawn_timer.restart();
+        }
+            
+        else if (count < 4 && respawn_timer.getElapsedTime().asSeconds() >= 30)
+        {
+            int type = rand() % 5 + 1;
+            Enemies.push_back(std::unique_ptr<Character>(new Character(Enemies_type[type], 6)));
+            sf::Sprite &last = Enemies.back()->sprite;
+            while (type)
+            {
+                last.setPosition(rand() % (w - int(std::floor(last.getGlobalBounds().width))), rand() % (h - int(std::floor(last.getGlobalBounds().height))));
+                for (int i = 0; i < Enemies.size() - 1; i++)
+                {
+                    if((*Enemies[i]).map_lvl == 6 && enemy_player_contact((*Enemies[i]).sprite, last))
+                        break;
+                    if (i == Enemies.size() - 2)
+                        type = 0;
+                }
+                    
+            }
+            respawn_timer.restart();
+        }
+            
+        
 
         normal_state = true;
         window.display();

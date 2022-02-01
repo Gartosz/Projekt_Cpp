@@ -7,6 +7,7 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <cstdlib>
 
 void save(const Character& player)
 {
@@ -98,7 +99,7 @@ void fight_menu(sf::RenderWindow& window, Character& player, Character& enemy, s
     float wait_time = 0.2;
     static sf::Clock t;
     static int i = 0;
-    static bool blink = false;
+    static bool blink[2] = { false, false };
     sf::Vector2f const options_positions[4] = { {100,500}, {100,600}, {400,500}, {400,600} };
     sf::Text player_hp;
     sf::Text enemy_hp;
@@ -172,24 +173,31 @@ void fight_menu(sf::RenderWindow& window, Character& player, Character& enemy, s
 
     if (i == 0 && choose && t.getElapsedTime().asSeconds() >= wait_time)
     {
-
-        enemy.Health -= player.stats.attack;
+        if (rand() % 100 + 1 <= player.stats.accuracy)
+        {
+            enemy.Health -= player.stats.attack;
+            blink[1] = true;
+            enemy.sprite.setColor(sf::Color(220, 100, 150, 255));
+        }
 
         if (enemy.Health <= 0)
         {
             enemy.sprite.setPosition(-100, -100);
             enemy.Health = 0;
         }
-        else if (player.Health <= 0)
+        
+        else if (rand() % 100 + 1 <= enemy.stats.accuracy)
+        {
+            player.Health -= enemy.stats.attack;
+            blink[0] = true;
+            player.sprite.setColor(sf::Color(220, 100, 150, 255));
+        }
+
+        if (player.Health <= 0)
         {
             player.sprite.setPosition(-200, -200);
             player.Health = 0;
         }
-        else
-            player.Health -= enemy.stats.attack;
-        blink = true;
-        player.sprite.setColor(sf::Color(220, 100, 150, 255));
-        enemy.sprite.setColor(sf::Color(220, 100, 150, 255));
 
         t.restart();
     }
@@ -203,21 +211,28 @@ void fight_menu(sf::RenderWindow& window, Character& player, Character& enemy, s
 
     else if (i == 2 && choose && t.getElapsedTime().asSeconds() >= wait_time)
     {
-        player.Health -= enemy.stats.attack;
+        if (rand() % 100 + 1 <= enemy.stats.accuracy)
+        {
+            player.Health -= enemy.stats.attack;
+            blink[0] = true;
+            player.sprite.setColor(sf::Color(220, 100, 150, 255));
+        }
         
         if (player.Health <= 0)
         {
             player.sprite.setPosition(-200, -200);
             player.Health = 0;
         }
-        blink = true;
-        player.sprite.setColor(sf::Color(220, 100, 150, 255));
+        
 
         t.restart();
     }
 
     else if (i == 3 && choose)
     {
+        if (rand() % 100 + 1 > player.stats.intelligence)
+            player.Health -= enemy.stats.attack;
+
         int x = 0, y = 0;
         if (player.sprite.getPosition().x > enemy.sprite.getPosition().x)
             x += 30;
@@ -230,13 +245,15 @@ void fight_menu(sf::RenderWindow& window, Character& player, Character& enemy, s
             y -= 30;
 
         player.sprite.setPosition(player.sprite.getPosition().x + x, player.sprite.getPosition().y + y);
+        enemy.Health = enemy.stats.max_health;
     }
 
-    if (blink && t.getElapsedTime().asMilliseconds() >= 120)
+    if ((blink[0] || blink[1]) && t.getElapsedTime().asMilliseconds() >= 120)
     {
         enemy.sprite.setColor(sf::Color::White);
         player.sprite.setColor(sf::Color::White);
-        blink = false;
+        blink[0] = false;
+        blink[1] = false;
 
     }
 
@@ -253,8 +270,8 @@ void stats_menu(sf::RenderWindow& window, Character& player, sf::RectangleShape&
     float wait_time = 0.2;
     sf::Text menu_text[11];
     std::wstring menu_string[11] = { L"Maksymalne zdrowie: " + std::to_wstring(player.stats.max_health), L"Atak: " + std::to_wstring(player.stats.attack), L"Celność: " + std::to_wstring(player.stats.accuracy), L"Inteligencja: " + std::to_wstring(player.stats.intelligence), L"Dostępne punkty doświadczenia: " + std::to_wstring(player.stats.experience),L"Statystyki postaci:      Poziom:", L"Aktualne zdrowie: " + std::to_wstring(player.Health).substr(0, int(log10(abs(player.Health))) + 4), std::to_wstring(player.stats.lvl[0]), std::to_wstring(player.stats.lvl[1]), std::to_wstring(player.stats.lvl[2]), std::to_wstring(player.stats.lvl[3]) };
-    int lvl_up_values[4] = { 10,5,5,5 };
-    int max_lvl_up[4] = { 300 / lvl_up_values[0] - player.stats.max_health / lvl_up_values[0], 120 / lvl_up_values[1] - player.stats.attack / lvl_up_values[1], 100 / lvl_up_values[2] - player.stats.accuracy / lvl_up_values[2], 40 / lvl_up_values[3] - player.stats.intelligence / lvl_up_values[3] };
+    int lvl_up_values[4] = { 10, 5, 10, 5 };
+    int max_lvl_up[4] = { 300 / lvl_up_values[0] - player.stats.max_health / lvl_up_values[0], 120 / lvl_up_values[1] - player.stats.attack / lvl_up_values[1], 100 / lvl_up_values[2] - player.stats.accuracy / lvl_up_values[2], 100 / lvl_up_values[3] - player.stats.intelligence / lvl_up_values[3] };
 
 
     static sf::Text message;

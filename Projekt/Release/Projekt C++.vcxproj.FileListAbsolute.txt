@@ -1,2 +1,3 @@
 C:\Users\Gartosz\Documents\GitHub\Projekt_Cpp\Projekt\Release\Projekt C++.exe
 F:\Projekt C++\Gra 2D\Projekt C++\Release\Projekt C++.exe
+C:\Projekt c++\Projekt_Cpp\Projekt\Release\Projekt C++.exe
