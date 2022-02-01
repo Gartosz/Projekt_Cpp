@@ -8,12 +8,15 @@
 #include <iomanip>
 #include <iostream>
 #include <cstdlib>
+#include <vector>
 
-void save(const Character& player)
+void save(const Character& player, const std::vector <std::unique_ptr<Character>>& Enemies) // zapisywanie - Bartosz
 {
-    if (!std::filesystem::is_directory("Saves"))
+    if (!std::filesystem::is_directory("Saves")) // sprawdzenie istnienia folderu
         std::filesystem::create_directory("Saves");
 
+
+    //tworzenie nazwy jako akutalnej daty i czasu
     time_t now = time(NULL);
     struct tm timeinfo;
     char buffer[80];
@@ -23,27 +26,36 @@ void save(const Character& player)
     strftime(buffer, sizeof(buffer), "%Y-%m-%d_%H%M%S", &timeinfo);
     std::string filename(buffer);
 
+    //zapsywanie
     std::ofstream file("./Saves/" + filename + ".txt");
     file << player;
+    
+    for (int i = 0; i < Enemies.size(); i++)
+    {
+        file << (*Enemies[i]).map_lvl << " " << (*Enemies[i]).sprite.getPosition().x << " " << (*Enemies[i]).sprite.getPosition().y << " " << (*Enemies[i]).type << " " << (*Enemies[i]).Health << "\n";
+    }
+
     file.close();
 }
 
-int escape_menu(sf::RenderWindow& window, sf::RectangleShape& gui, bool& menu_open, bool* move_menu, bool& choose, sf::CircleShape& option, sf::Font const& font, bool& menu, const Character& player)
+// escape menu - Bartosz
+int escape_menu(sf::RenderWindow& window, sf::RectangleShape& gui, bool& menu_open, bool* move_menu, bool& choose, sf::CircleShape& option, sf::Font const& font, bool& menu, const Character& player, const std::vector <std::unique_ptr<Character>>& Enemies)
 {
-    sf::Vector2f const options_positions[4] = { {350,200}, {350,300}, {350, 400}, {350, 500} };
+    sf::Vector2f const options_positions[4] = { {350,200}, {350,300}, {350, 400}, {350, 500} }; // pozycje opcji
     static int i = 0;
     static sf::Clock t;
     float wait_time = 0.2;
     sf::Text menu_text[4];
-    std::wstring menu_string[4] = { L"Wznów", L"Zapisz", L"Wyjdź do menu głównego", L"Wyjdź do pulpitu"};
+    std::wstring menu_string[4] = { L"Wznów", L"Zapisz", L"Wyjdź do menu głównego", L"Wyjdź do pulpitu"}; // opcje
 
-    if (menu)
+    if (menu) // inicjowanie wartości po wejściu do menu
     {
         menu = false;
         i = 0;
         t.restart();
     }
 
+    // poruszanie się z ograniczeniem czasowym
     if (move_menu[1] && t.getElapsedTime().asSeconds() >= wait_time)
     {
         i++;
@@ -62,7 +74,8 @@ int escape_menu(sf::RenderWindow& window, sf::RectangleShape& gui, bool& menu_op
     else if (i < 0)
         i = int(sizeof(menu_text) / sizeof(*menu_text)) - 1;
 
-    option.setPosition(options_positions[i]);
+    // wyświetlania
+    option.setPosition(options_positions[i]); // aktualny wybór
     window.draw(gui);
     window.draw(option);
     for (int j = 0; j < sizeof(menu_text)/sizeof(*menu_text); j++)
@@ -74,19 +87,20 @@ int escape_menu(sf::RenderWindow& window, sf::RectangleShape& gui, bool& menu_op
         window.draw(menu_text[j]);
     }
 
-    if (i == 0 && choose && t.getElapsedTime().asSeconds() >= wait_time)
+    // obsługa opcji
+    if (i == 0 && choose && t.getElapsedTime().asSeconds() >= wait_time) // wznowienie
         menu_open = false;
 
-    else if (i == 1 && choose && t.getElapsedTime().asSeconds() >= wait_time)
-        save(player);
+    else if (i == 1 && choose && t.getElapsedTime().asSeconds() >= wait_time) // zapis
+        save(player, Enemies);
 
-    else if (i == 2 && choose && t.getElapsedTime().asSeconds() >= wait_time)
+    else if (i == 2 && choose && t.getElapsedTime().asSeconds() >= wait_time) // menu główne
     {
         window.close();
         return main();
     }
 
-    else if (i == 3 && choose && t.getElapsedTime().asSeconds() >= wait_time)
+    else if (i == 3 && choose && t.getElapsedTime().asSeconds() >= wait_time) // wyjście do pulpitu
     {
         window.close();
         return 0;
@@ -94,18 +108,21 @@ int escape_menu(sf::RenderWindow& window, sf::RectangleShape& gui, bool& menu_op
 
 
 }
+
+// walka z wrogiem - Bartosz
 void fight_menu(sf::RenderWindow& window, Character& player, Character& enemy, sf::RectangleShape& gui, bool* move_menu, bool& choose, sf::CircleShape& option, bool& menu, sf::Font const& font)
 {
     float wait_time = 0.2;
     static sf::Clock t;
     static int i = 0;
     static bool blink[2] = { false, false };
-    sf::Vector2f const options_positions[4] = { {100,500}, {100,600}, {400,500}, {400,600} };
+    sf::Vector2f const options_positions[4] = { {100,500}, {100,600}, {400,500}, {400,600} }; // pozycje opcji
     sf::Text player_hp;
     sf::Text enemy_hp;
     sf::Text menu_text[4];
-    std::wstring menu_string[4] = { L"Atak", L"Ekwipunek", L"Pomiń turę", L"Ucieknij" };
+    std::wstring menu_string[4] = { L"Atak", L"Ekwipunek", L"Pomiń turę", L"Ucieknij" }; // opcje
 
+    // wyświetlanie życia
     player_hp.setFont(font);
     player_hp.setPosition(0, 0);
     player_hp.setCharacterSize(40);
@@ -116,7 +133,7 @@ void fight_menu(sf::RenderWindow& window, Character& player, Character& enemy, s
     enemy_hp.setCharacterSize(40);
     enemy_hp.setString(std::to_string(enemy.Health).substr(0, int(log10(abs(enemy.Health))) + 4) + " HP");
 
-    if (menu)
+    if (menu) // inicjowanie wartości po wejściu do walki
     {
         i = 0;
         menu = false;
@@ -128,10 +145,12 @@ void fight_menu(sf::RenderWindow& window, Character& player, Character& enemy, s
         t.restart();
     }
 
-    sf::Vector2f pos[4] = { player.sprite.getPosition(),enemy.sprite.getPosition() };
+    // pozycja w walce
+    sf::Vector2f pos[4] = { player.sprite.getPosition(), enemy.sprite.getPosition() };
     player.sprite.setPosition(300, 250);
     enemy.sprite.setPosition(600, 100);
 
+    // poruszanie się z ograniczeniem czasowym
     if (move_menu[2] && t.getElapsedTime().asSeconds() >= wait_time)
     {
         i++;
@@ -149,7 +168,8 @@ void fight_menu(sf::RenderWindow& window, Character& player, Character& enemy, s
     else if (i < 0)
         i = 3;
 
-    option.setPosition(options_positions[i]);
+    // wyświetlania
+    option.setPosition(options_positions[i]); // aktualny wybór
 
     window.draw(gui);
     window.draw(player.sprite);
@@ -166,14 +186,15 @@ void fight_menu(sf::RenderWindow& window, Character& player, Character& enemy, s
         window.draw(menu_text[j]);
     }
 
+    // przywrócenie pozycji
     player.sprite.setPosition(pos[0]);
     enemy.sprite.setPosition(pos[1]);
 
-    static bool eq = true;
+    static bool eq = true; // Michał
 
-    if (i == 0 && choose && t.getElapsedTime().asSeconds() >= wait_time)
+    if (i == 0 && choose && t.getElapsedTime().asSeconds() >= wait_time) // atak
     {
-        if (rand() % 100 + 1 <= player.stats.accuracy)
+        if (rand() % 100 + 1 <= player.stats.accuracy) // sprawdzanie celności bohatera
         {
             enemy.Health -= player.stats.attack;
             blink[1] = true;
@@ -186,7 +207,7 @@ void fight_menu(sf::RenderWindow& window, Character& player, Character& enemy, s
             enemy.Health = 0;
         }
         
-        else if (rand() % 100 + 1 <= enemy.stats.accuracy)
+        else if (rand() % 100 + 1 <= enemy.stats.accuracy) // sprawdzanie celności wroga
         {
             player.Health -= enemy.stats.attack;
             blink[0] = true;
@@ -201,17 +222,17 @@ void fight_menu(sf::RenderWindow& window, Character& player, Character& enemy, s
 
         t.restart();
     }
-    else if (i == 1 && choose)
+    else if (i == 1 && choose) // ekwipunek
     {
+        //Michał
         if (eq) { ekwipunek(window, player, gui, move_menu, choose, option, menu, font); }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))eq = false;
 
-
     }
 
-    else if (i == 2 && choose && t.getElapsedTime().asSeconds() >= wait_time)
+    else if (i == 2 && choose && t.getElapsedTime().asSeconds() >= wait_time) // pominięcie tury
     {
-        if (rand() % 100 + 1 <= enemy.stats.accuracy)
+        if (rand() % 100 + 1 <= enemy.stats.accuracy) // sprawdzanie celności wroga
         {
             player.Health -= enemy.stats.attack;
             blink[0] = true;
@@ -228,27 +249,37 @@ void fight_menu(sf::RenderWindow& window, Character& player, Character& enemy, s
         t.restart();
     }
 
-    else if (i == 3 && choose)
+    else if (i == 3 && choose) // ucieczka
     {
-        if (rand() % 100 + 1 > player.stats.intelligence)
+        if (rand() % 100 + 1 > player.stats.intelligence) // sprawdzanie inteligencji bohatera
             player.Health -= enemy.stats.attack;
 
-        int x = 0, y = 0;
-        if (player.sprite.getPosition().x > enemy.sprite.getPosition().x)
-            x += 30;
-        else
-            x -= 30;
+        if (player.Health <= 0)
+        {
+            player.sprite.setPosition(-200, -200);
+            player.Health = 0;
+        }
+        else // odsunięcie od wroga, aby dezaktywować tryb walki
+        {
+            int x = 0, y = 0;
+            if (player.sprite.getPosition().x > enemy.sprite.getPosition().x)
+                x += 30;
+            else
+                x -= 30;
 
-        if (player.sprite.getPosition().y > enemy.sprite.getPosition().y)
-            y += 30;
-        else
-            y -= 30;
+            if (player.sprite.getPosition().y > enemy.sprite.getPosition().y)
+                y += 30;
+            else
+                y -= 30;
 
-        player.sprite.setPosition(player.sprite.getPosition().x + x, player.sprite.getPosition().y + y);
-        enemy.Health = enemy.stats.max_health;
+            player.sprite.setPosition(player.sprite.getPosition().x + x, player.sprite.getPosition().y + y);
+
+        }
+
+        enemy.Health = enemy.stats.max_health; // odnowienie życia wroga
     }
 
-    if ((blink[0] || blink[1]) && t.getElapsedTime().asMilliseconds() >= 120)
+    if ((blink[0] || blink[1]) && t.getElapsedTime().asMilliseconds() >= 120) // wyłączenie mignięcia po ataku
     {
         enemy.sprite.setColor(sf::Color::White);
         player.sprite.setColor(sf::Color::White);
@@ -260,17 +291,19 @@ void fight_menu(sf::RenderWindow& window, Character& player, Character& enemy, s
 }
         
 
-
+// menu statystyk - Bartosz
 void stats_menu(sf::RenderWindow& window, Character& player, sf::RectangleShape& gui, bool* move_menu, bool& choose, sf::CircleShape& option, bool& menu, sf::Font const& font)
 {
-    const sf::Vector2f options_positions[11] = { {50,200}, {50,300}, {50, 400}, {50, 500}, {50,630}, {50,50}, {600,500}, {500,200}, {500,300}, {500, 400}, {500, 500} };
+    const sf::Vector2f options_positions[11] = { {50,200}, {50,300}, {50, 400}, {50, 500}, {50,630}, {50,50}, {600,500}, {500,200}, {500,300}, {500, 400}, {500, 500} }; // pozycje opcji
     const sf::Vector2f pos = player.sprite.getPosition();
     static int i = 0;
     static sf::Clock t;
     float wait_time = 0.2;
     sf::Text menu_text[11];
+    // opcje
     std::wstring menu_string[11] = { L"Maksymalne zdrowie: " + std::to_wstring(player.stats.max_health), L"Atak: " + std::to_wstring(player.stats.attack), L"Celność: " + std::to_wstring(player.stats.accuracy), L"Inteligencja: " + std::to_wstring(player.stats.intelligence), L"Dostępne punkty doświadczenia: " + std::to_wstring(player.stats.experience),L"Statystyki postaci:      Poziom:", L"Aktualne zdrowie: " + std::to_wstring(player.Health).substr(0, int(log10(abs(player.Health))) + 4), std::to_wstring(player.stats.lvl[0]), std::to_wstring(player.stats.lvl[1]), std::to_wstring(player.stats.lvl[2]), std::to_wstring(player.stats.lvl[3]) };
-    int lvl_up_values[4] = { 10, 5, 10, 5 };
+    int lvl_up_values[4] = { 10, 5, 10, 5 }; // wartości ulepszania poziomów
+    // maksymalne wartości poziomów
     int max_lvl_up[4] = { 300 / lvl_up_values[0] - player.stats.max_health / lvl_up_values[0], 120 / lvl_up_values[1] - player.stats.attack / lvl_up_values[1], 100 / lvl_up_values[2] - player.stats.accuracy / lvl_up_values[2], 100 / lvl_up_values[3] - player.stats.intelligence / lvl_up_values[3] };
 
 
@@ -279,7 +312,7 @@ void stats_menu(sf::RenderWindow& window, Character& player, sf::RectangleShape&
 
     player.sprite.setPosition(700, 400);
 
-    if (menu)
+    if (menu) // inicjowanie wartości po wejściu do menu
     {
         menu = false;
         i = 0;
@@ -290,6 +323,7 @@ void stats_menu(sf::RenderWindow& window, Character& player, sf::RectangleShape&
         t.restart();
     }
 
+    // poruszanie się z ograniczeniem czasowym
     if (move_menu[1] && t.getElapsedTime().asSeconds() >= wait_time)
     {
         i++;
@@ -304,12 +338,15 @@ void stats_menu(sf::RenderWindow& window, Character& player, sf::RectangleShape&
 
     if (i > 3)
         i = 0;
+
     else if (i < 0)
         i = 3;
 
-    option.setPosition(options_positions[i]);
+    // wyświetlanie
+    option.setPosition(options_positions[i]); // aktualny wybór
     window.draw(gui);
     window.draw(player.sprite);
+
     for (int j = 0; j < sizeof(menu_text) / sizeof(*menu_text); j++)
     {
         menu_text[j].setFont(font);
@@ -319,13 +356,16 @@ void stats_menu(sf::RenderWindow& window, Character& player, sf::RectangleShape&
         window.draw(menu_text[j]);
     }
 
-    if (choose && t.getElapsedTime().asSeconds() >= wait_time)
+    option.setPosition(options_positions[i]);
+    window.draw(option);
+
+    if (choose && t.getElapsedTime().asSeconds() >= wait_time) // wciśnięcie entera(wybór)
     {
-        if (message.getString() == "")
+        if (message.getString() == "") // brak informacji
         {
-            if (player.stats.experience >= player.stats.lvl[i] + 1 && max_lvl_up[i] > 0)
+            if (player.stats.experience >= player.stats.lvl[i] + 1 && max_lvl_up[i] > 0) // sprawdzanie ilości wymaganych punktów
             {
-                switch (i)
+                switch (i) // ulepszanie poszczególnych wartości
                 {
                 case 0:
                     player.stats.max_health += lvl_up_values[i];
@@ -343,15 +383,17 @@ void stats_menu(sf::RenderWindow& window, Character& player, sf::RectangleShape&
                     break;
                 }
 
+                // zmiana ilości punktów doświadczenia
                 player.stats.experience -= player.stats.lvl[i] + 1;
                 player.stats.lvl[i] ++;
             }
-            else if (max_lvl_up[i] == 0)
+            // ustawienie informacji zależnie od sytuacji
+            else if (max_lvl_up[i] == 0) 
                 message.setString(L"Nie można bardziej ulepszyć\nwybranej statystyki!");
             else
                 message.setString(L"Brakuje ci punktów doświadczenia!");
 
-            if (message.getString() != "")
+            if (message.getString() != "") // ustawienie pozycji informacji
             {
                 message.setPosition(window.getSize().x / 2 - message.getGlobalBounds().width / 2, window.getSize().y / 2 - message.getGlobalBounds().height / 2);
                 message_bg.setSize(sf::Vector2f(message.getGlobalBounds().width + 30, message.getGlobalBounds().height + 30));
@@ -359,20 +401,22 @@ void stats_menu(sf::RenderWindow& window, Character& player, sf::RectangleShape&
             }
 
         }
-        else
+        else // kasowanie informacji
         {
             message.setString("");
             message_bg.setSize(sf::Vector2f(0, 0));
         }
 
     }
-    option.setPosition(options_positions[i]);
-    window.draw(option);
+    // wyświetlanie nowych informacji
     window.draw(message_bg);
     window.draw(message);
 
-    player.sprite.setPosition(pos);
+    player.sprite.setPosition(pos); // przywrócenie pozycji
 }
+
+
+// Michał
 void ekwipunek(sf::RenderWindow& window, Character& player, sf::RectangleShape& gui, bool* move_menu, bool& choose, sf::CircleShape& option, bool& menu, sf::Font const& font)
 {
     sf::Text eq[sizeof(player.items_n) / sizeof(player.items_n[0]) + 1];

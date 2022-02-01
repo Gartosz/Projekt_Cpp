@@ -1,7 +1,7 @@
 #pragma once
 #include <fstream>
 
-struct character_type {
+struct character_type { //zmienne potrzebne do stworzenia obiektu - Bartosz
     std::string txt_patch;
     float scale;
     int size[4];
@@ -14,8 +14,9 @@ struct character_type {
     int lvl[4] = { 0,0,0,0 }; 
 };
 
-class Character {
+class Character { // klasa postaci(bohater oraz wrogowie) - Bartosz
 public:
+    int type;
     float Health;
     sf::Texture txt;
     sf::Sprite sprite;
@@ -27,9 +28,9 @@ public:
         int experience = 0;
     };
     Stats stats;
-    std::string items_n[6] ={ "Mala apteczka","Duza apteczka","Jablko","Pistolet","Butelka","Noz" };
-    int items_v[6] = { 0,0,0,0,0,0 };
-    Character(const character_type& values, const int& map_lvl);
+    std::string items_n[6] ={ "Mala apteczka","Duza apteczka","Jablko","Pistolet","Butelka","Noz" }; // Micha³
+    int items_v[6] = { 0,0,0,0,0,0 }; // Micha³
+    Character(const int &type, const character_type& values, const int& map_lvl);
     void player_move(bool* isMoving, sf::Clock& timer);
 
 private:
@@ -37,20 +38,21 @@ private:
     sf::IntRect rect;
     void move(sf::Clock& timer, double const& speed_h, double const& speed_v, const int& top, const int& height);
 
-    friend std::ostream& operator<<(std::ostream& os, Character const& x) {
+    friend std::ostream& operator<<(std::ostream& os, Character const& x) { // wartoœci g³ownego bohatera zwracane podczas zapisu - Bartosz
         os << x.map_lvl << " " << x.sprite.getPosition().x << " " << x.sprite.getPosition().y << "\n";
         os << x.Health << "\n" << x.stats.experience << "\n";
         os << x.stats.max_health << " " << x.stats.attack << " " << x.stats.accuracy << " " << x.stats.intelligence << "\n";
         for (int i = 0; i < sizeof(x.stats.lvl) / sizeof(*x.stats.lvl); i++)
             os << x.stats.lvl[i] << " ";
+        os << "\n\n";
         return os;
     }
 
-    friend Character& operator<<(Character& x, const std::wstring& filename) {
+    friend Character& operator<<(Character& x, const std::wstring& filename) { // wartoœci g³ównego bohatera ustawiane podczas wczytywania - Bartosz
 
         std::ifstream file(filename);
         int values[13];
-        for (int i = 0; i < 13; i++)
+        for (int i = 0; i < sizeof(values) / sizeof(*values); i++)
             file >> values[i];
 
         file.close();

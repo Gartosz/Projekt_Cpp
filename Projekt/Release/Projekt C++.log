@@ -1,27 +1,26 @@
-﻿  Window.cpp
-C:\Projekt C++\Projekt_Cpp\Projekt\Character.h(59,49): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
-C:\Projekt C++\Projekt_Cpp\Projekt\Character.h(59,38): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
-C:\Projekt C++\Projekt_Cpp\Projekt\Character.h(60,28): warning C4244: "=": konwersja z "int" do "float", możliwa utrata danych
-C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(250,15): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
-C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(260,121): warning C4305: "inicjowanie": obcięcie z "double" do "float"
-C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(303,50): warning C4305: "argument": obcięcie z "double" do "float"
-C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(309,36): warning C4305: "argument": obcięcie z "double" do "float"
-C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(315,36): warning C4305: "argument": obcięcie z "double" do "float"
-C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(321,36): warning C4305: "argument": obcięcie z "double" do "float"
-C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(327,36): warning C4305: "argument": obcięcie z "double" do "float"
-C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(333,36): warning C4305: "argument": obcięcie z "double" do "float"
-C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(339,36): warning C4305: "argument": obcięcie z "double" do "float"
-C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(411,31): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(421,31): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(432,31): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(513,31): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(536,31): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(569,103): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
-C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(569,41): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
-C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(570,35): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+﻿  Menus.cpp
+C:\Projekt c++\Projekt_Cpp\Projekt\Character.h(61,49): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+C:\Projekt c++\Projekt_Cpp\Projekt\Character.h(61,38): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+C:\Projekt c++\Projekt_Cpp\Projekt\Character.h(62,28): warning C4244: "=": konwersja z "int" do "float", możliwa utrata danych
+C:\Projekt c++\Projekt_Cpp\Projekt\Menus.cpp(33,23): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+C:\Projekt c++\Projekt_Cpp\Projekt\Menus.cpp(47,26): warning C4305: "inicjowanie": obcięcie z "double" do "float"
+C:\Projekt c++\Projekt_Cpp\Projekt\Menus.cpp(115,26): warning C4305: "inicjowanie": obcięcie z "double" do "float"
+C:\Projekt c++\Projekt_Cpp\Projekt\Menus.cpp(279,35): warning C4244: "=": konwersja z "int" do "float", możliwa utrata danych
+C:\Projekt c++\Projekt_Cpp\Projekt\Menus.cpp(301,26): warning C4305: "inicjowanie": obcięcie z "double" do "float"
+C:\Projekt c++\Projekt_Cpp\Projekt\Menus.cpp(424,26): warning C4305: "inicjowanie": obcięcie z "double" do "float"
+C:\Projekt c++\Projekt_Cpp\Projekt\Menus.cpp(434,36): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+C:\Projekt c++\Projekt_Cpp\Projekt\Menus.cpp(434,31): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+C:\Projekt c++\Projekt_Cpp\Projekt\Menus.cpp(441,32): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+C:\Projekt c++\Projekt_Cpp\Projekt\Menus.cpp(441,27): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+C:\Projekt c++\Projekt_Cpp\Projekt\Menus.cpp(488,75): warning C4244: "+=": konwersja z "double" do "float", możliwa utrata danych
+C:\Projekt c++\Projekt_Cpp\Projekt\Menus.cpp(489,93): warning C4244: "=": konwersja z "int" do "float", możliwa utrata danych
+C:\Projekt c++\Projekt_Cpp\Projekt\Menus.cpp(493,74): warning C4244: "+=": konwersja z "double" do "float", możliwa utrata danych
+C:\Projekt c++\Projekt_Cpp\Projekt\Menus.cpp(494,93): warning C4244: "=": konwersja z "int" do "float", możliwa utrata danych
+C:\Projekt c++\Projekt_Cpp\Projekt\Menus.cpp(498,75): warning C4244: "+=": konwersja z "double" do "float", możliwa utrata danych
+C:\Projekt c++\Projekt_Cpp\Projekt\Menus.cpp(499,93): warning C4244: "=": konwersja z "int" do "float", możliwa utrata danych
   Trwa generowanie kodu
-  11 of 1034 functions ( 1.1%) were compiled, the rest were copied from previous compilation.
+  2 of 1044 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     3 functions had inline decision re-evaluated but remain unchanged
   Zakończono generowanie kodu
-  Projekt C++.vcxproj -> C:\Projekt C++\Projekt_Cpp\Projekt\Release\Projekt C++.exe
+  Projekt C++.vcxproj -> C:\Projekt c++\Projekt_Cpp\Projekt\Release\Projekt C++.exe

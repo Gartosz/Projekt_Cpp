@@ -10,19 +10,21 @@
 #include <io.h>
 #include <fcntl.h>
 
+//Bartosz - menu główne sterowane strzałkami, z podświetleniem wyboru
+
 int main()
 {
 #define strzalka_up 72
 #define strzalka_down 80
 #define enter 13
 #define escape 27
-	_setmode(_fileno(stdout), _O_U16TEXT);
+	_setmode(_fileno(stdout), _O_U16TEXT); //tryb UTF-16
 	int k[5] = { 33,0,0,0,0 }, co = 1, klawisz = 0, p = 0, c = 0, j = 0;
-	std::string opis = "Gra";
+	std::wstring opis = L"Gra, w której Twoim zadaniem będzie ucieczka z miasta, które zostało zaatakowane bronią masowego rażenia. Poruszasz się strzałkami lub WSAD, a przez lokacje przechodzisz wciskając Spację.";
 	while (p == 0)
 	{
 		c = 0;
-		system("cls");
+		system("cls"); //opcje zapisane wstringiem w celu wyświetlania polskich znaków(plik zapisany w UTF-16)
 		std::wcout << "\x1b[" << k[0] << L"m1. Zacznij nową grę\n";
 		std::wcout << "\x1b[" << k[1] << L"m2. Kontynuuj grę\n";
 		std::wcout << "\x1b[" << k[2] << L"m3. Wczytaj grę\n";
@@ -64,15 +66,15 @@ int main()
 	{
 	default:
 		break;
-	case 1:
+	case 1: //uruchomienie gry od nowa
 		game(1);
 		break;
-	case 2:
+	case 2: //uruchomienie gry od ostatniego dostepnego zapisu
 	{
 		if (!std::filesystem::is_empty("./Saves/"))
 		{
 			std::filesystem::path filename = "";
-			for (const auto& entry : std::filesystem::directory_iterator("./Saves/"))
+			for (const auto& entry : std::filesystem::directory_iterator("./Saves/")) //iterowanie po plikach
 			{
 
 				std::filesystem::path p = entry.path();
@@ -80,7 +82,7 @@ int main()
 					filename = p;
 				if (is_regular_file(p) && p.extension() == ".txt")
 				{
-					if (std::filesystem::last_write_time(p) > std::filesystem::last_write_time(filename))
+					if (std::filesystem::last_write_time(p) > std::filesystem::last_write_time(filename)) //sprawdzanie ostatniego zapisu
 						filename = p;
 				}
 			}
@@ -91,7 +93,7 @@ int main()
 			return main();
 		break;
 	}
-	case 3:
+	case 3: //wczytywanie gry - działa tak jak poprzednie menu, ale na punktach skrajnych nastepuje przeskok do początku/końca
 	{
 		system("cls");
 		std::vector<std::wstring> paths;
@@ -147,7 +149,7 @@ int main()
 		game(0, filename);
 		break;
 	}
-	case 4:
+	case 4: //wyświetlenie opisu
 		c = 0;
 		system("cls");
 		for (int i = 0; i < opis.length(); i++)
@@ -158,7 +160,7 @@ int main()
 		c = _getch();
 		return main();
 		break;
-	case 5:
+	case 5: //wyjście
 		std::wcout << "Do zobaczenia :)";
 		Sleep(2000);
 		return 0;

@@ -1,6 +1,6 @@
 #include "Scenes.h"
 
-int new_game(sf::RenderWindow& window, const sf::Font& font, int& start_value)
+int new_game(sf::RenderWindow& window, const sf::Font& font, int& start_value) // scenka nowej gry - Bartosz
 {
     static sf::RectangleShape fade;
     static sf::SoundBuffer buffer;
@@ -10,7 +10,7 @@ int new_game(sf::RenderWindow& window, const sf::Font& font, int& start_value)
     static int i = 255, start = 0;
     static bool s = false;
 
-    if (start_value == 1)
+    if (start_value == 1) // pierwsza wiadomoœci oraz ³adownie dŸwiêku
     {
         text.setString(L"By³ zwyk³y niedzielny poranek. \nŒpisz w najlepsze, gdy nagle...");
         text.setFont(font);
@@ -25,11 +25,11 @@ int new_game(sf::RenderWindow& window, const sf::Font& font, int& start_value)
         start_value = 2;
     }
 
-    window.draw(fade);
+    window.draw(fade); // t³o
 
     switch (start)
     {
-    case 0:
+    case 0: // ustawienie drugiej wiadomoœci
         window.draw(text);
 
         if (timer.getElapsedTime().asSeconds() >= 4)
@@ -40,18 +40,18 @@ int new_game(sf::RenderWindow& window, const sf::Font& font, int& start_value)
         }
 
         break;
-    case 1:
+    case 1: // uruchomienie dŸwiêku syreny
         start++;
         sound.play();
         break;
-    case 2:
+    case 2: // odczekanie sekundy
         if (timer.getElapsedTime().asSeconds() >= 1)
         {
             start++;
             timer.restart();
         }
         break;
-    case 3:
+    case 3: // wyœwietlenie drugiej wiadomoœci
         window.draw(text);
 
         if (timer.getElapsedTime().asSeconds() >= 4)
@@ -64,18 +64,19 @@ int new_game(sf::RenderWindow& window, const sf::Font& font, int& start_value)
         break;
     }
 
-    if (s && i > 0)
+    if (s && i > 0) // rozjaœnianie siê ekranu
     {
         fade.setFillColor(sf::Color(0, 0, 0, i));
         if (timer.getElapsedTime().asMilliseconds() >= 20)
             i--;
     }
 
-    if (i == 0)
+    if (i == 0) // zmiana wartoœci, aby poprawnie uruchomiæ nastêpn¹ scenkê
         start_value = 3;
 
 }
 
+// scenka w bunkrze - Bartosz
 void bunker(sf::RenderWindow& window, sf::Font const& font, int& start_value, const sf::Sprite &map)
 {
     static int i = 0, j = 0;
@@ -85,7 +86,7 @@ void bunker(sf::RenderWindow& window, sf::Font const& font, int& start_value, co
     static sf::Clock timer, wait;
     const int time_stamp = 40;
 
-    if (start_value == 3)
+    if (start_value == 3) // inicjowanie wartoœci
     {
         fade.setFillColor(sf::Color(0, 0, 0, 0));
         fade2.setFillColor(sf::Color(255, 255, 255, 100));
@@ -94,23 +95,24 @@ void bunker(sf::RenderWindow& window, sf::Font const& font, int& start_value, co
         start_value++;
     }
 
-    if (start_value < 5 && timer.getElapsedTime().asMilliseconds() >= 20 && i < 255) {
+    if (start_value < 5 && timer.getElapsedTime().asMilliseconds() >= 15 && i < 255) // œciemnianie siê obrazu
+    {
         ++i;
         fade.setFillColor(sf::Color(0, 0, 0, i));
         timer.restart();
     }
 
-    else if (start_value < 5 && i == 255)
+    else if (start_value < 5 && i == 255) // ustawienie wy¿szej wartoœci i, aby przejœæ dalej
     {
         timer.restart();
         ++i;
     }
 
-    window.draw(fade);
+    window.draw(fade); // rysowanie t³a
 
     if (i > 255)
     {
-
+        // tekst zmieniaj¹cy siê o jeden znak
         if (start_value <5 && j < strings[i - 256].length() && wait.getElapsedTime().asMilliseconds() >= time_stamp && j <= strings[i - 256].length())
         {
             ++j;
@@ -120,7 +122,7 @@ void bunker(sf::RenderWindow& window, sf::Font const& font, int& start_value, co
 
         }
 
-
+        // nastêpna wiadomoœæ po odczekaniu
         else if (start_value < 5 && timer.getElapsedTime().asMilliseconds() >= time_stamp * strings[i - 256].length() + 4000 && i - 256 < int(sizeof(strings) / sizeof(*strings)) - 1)
         {
             ++i;
@@ -128,17 +130,17 @@ void bunker(sf::RenderWindow& window, sf::Font const& font, int& start_value, co
             timer.restart();
         }
 
-        else if (start_value < 5 && i >= 256 + int(sizeof(strings) / sizeof(*strings)) - 1)
+        else if (start_value < 5 && i >= 256 + int(sizeof(strings) / sizeof(*strings)) - 1) // przejœcie do kolejnego elementu
             start_value = 5;
 
-        if (start_value == 6 && timer.getElapsedTime().asSeconds() >= 5)
+        if (start_value == 6 && timer.getElapsedTime().asSeconds() >= 5) // ustawienie wartoœci do nastêpnej sceny
         {
             start_value = 7;
             j = 255;
             timer.restart();
         }
 
-        else if (start_value == 7 && timer.getElapsedTime().asMilliseconds() >= 5 && j > 0)
+        else if (start_value == 7 && timer.getElapsedTime().asMilliseconds() >= 5 && j > 0) // œciemnianie siê mapy
         {
             --j;
             if( j < 255 - 100)
@@ -148,17 +150,17 @@ void bunker(sf::RenderWindow& window, sf::Font const& font, int& start_value, co
             timer.restart();
         }
 
-        else if (start_value == 7 && j == 0)
+        else if (start_value == 7 && j == 0) // ustawienie do rozjaœniania
         {
             timer.restart();
             i = 255;
             start_value = 8;
         }
 
-        if (start_value < 5)
+        if (start_value < 5) // rysowanie tekstu
             window.draw(text);
 
-        else if (start_value >= 5)
+        else if (start_value >= 5) // wyœwietlanie mapy z "wybieleniem"
         {
             window.draw(map);
             window.draw(fade2);
@@ -173,7 +175,7 @@ void bunker(sf::RenderWindow& window, sf::Font const& font, int& start_value, co
         
     }
 
-    else if (start_value == 8)
+    else if (start_value == 8) // rozjaœnianie obrazu
     {
         if (timer.getElapsedTime().asMilliseconds() >= 10 && i > 0) {
             --i;
@@ -181,7 +183,7 @@ void bunker(sf::RenderWindow& window, sf::Font const& font, int& start_value, co
             timer.restart();
         }
 
-        else if (i == 0)
+        else if (i == 0) // koniec scen
             start_value = 0;
     }
 

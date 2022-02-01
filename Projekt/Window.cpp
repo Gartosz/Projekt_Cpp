@@ -9,20 +9,28 @@
 #include "Item.h"
 #include <cstdlib>
 #include <ctime>
+#include <fstream>
 
 
 #define K sf::Keyboard
 
-void Event(sf::RenderWindow& window, const K::Key* Keys, bool* isMoving, bool& choose, bool& menu_open, bool& menu, bool& stats_open, bool& eq)
+void Event(sf::RenderWindow& window, const K::Key* Keys, bool* isMoving, bool& choose, bool& menu_open, bool& menu, bool& stats_open, bool& eq) // obsługa zdarzeń sfml - Bartosz
 {
     sf::Event event;
+    // stany zwolnienia przycisków odpowiadających za menu - Bartosz
     static bool escape_release = true;
     static bool enter_release = true;
     static bool tab_release = true;
-    static bool i_release = true;
-    while (window.pollEvent(event))
+    static bool i_release = true; // Michał
+    while (window.pollEvent(event)) // pętla podczas eventu - Bartosz
     {
 
+        if (event.type == sf::Event::Closed) // poprawne zamknięcie okna
+        {
+            window.close();
+        }
+
+        //obsługa otwierania/zamykania menu w grze (aby uniknąć migającego okna)- Bartosz
         if (!menu_open && K::isKeyPressed(K::Escape) && escape_release)
         {
             menu_open = true;
@@ -36,26 +44,10 @@ void Event(sf::RenderWindow& window, const K::Key* Keys, bool* isMoving, bool& c
             escape_release = false;
         }
 
-        if (!eq && K::isKeyPressed(K::I) && i_release)
-        {
-            eq = true;
-            menu = true;
-            i_release = false;
-        }
-        else if (eq && K::isKeyPressed(K::I) && i_release)
-        {
-            eq = false;
-            i_release = false;
-        }
-
-        if (event.type == sf::Event::KeyReleased && event.key.code == K::Escape)
+        if (event.type == sf::Event::KeyReleased && event.key.code == K::Escape) // obsługa escape - Bartosz
             escape_release = true;
 
-        if (event.type == sf::Event::Closed)
-        {
-            window.close();
-        }
-
+        //obsługa wyboru (aby następowało to jednokrotnie podczas wciśnięcia) - Bartosz
         if (enter_release && K::isKeyPressed(K::Enter))
         {
             choose = true;
@@ -69,7 +61,7 @@ void Event(sf::RenderWindow& window, const K::Key* Keys, bool* isMoving, bool& c
         if (event.type == sf::Event::KeyReleased && event.key.code == K::Enter)
             enter_release = true;
 
-
+        // obsługa menu statystyk - Bartosz
         if (!stats_open && K::isKeyPressed(K::Tab) && tab_release)
         {
             stats_open = true;
@@ -86,10 +78,7 @@ void Event(sf::RenderWindow& window, const K::Key* Keys, bool* isMoving, bool& c
         if (event.type == sf::Event::KeyReleased && event.key.code == K::Tab)
             tab_release = true;
 
-        if (event.type == sf::Event::KeyReleased && event.key.code == K::I)
-            i_release = true;
-
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 4; i++) // sprawdzanie kierunku ruchu - Bartosz
         {
             if (K::isKeyPressed(Keys[2 * i]) || K::isKeyPressed(Keys[2 * i + 1]))
                 isMoving[i] = true;
@@ -97,10 +86,26 @@ void Event(sf::RenderWindow& window, const K::Key* Keys, bool* isMoving, bool& c
                 isMoving[i] = false;
         }
 
+        //Michał
+        if (!eq && K::isKeyPressed(K::I) && i_release)
+        {
+            eq = true;
+            menu = true;
+            i_release = false;
+        }
+        else if (eq && K::isKeyPressed(K::I) && i_release)
+        {
+            eq = false;
+            i_release = false;
+        }
+
+        if (event.type == sf::Event::KeyReleased && event.key.code == K::I)
+            i_release = true;
+
     }
 }
 
-void startmapcol(sf::Sprite& a)
+void startmapcol(sf::Sprite& a) //Michał
 {
     //kolizja gornej sciany
     if (a.getPosition().y < 180)a.setPosition(a.getPosition().x, 180);
@@ -224,7 +229,7 @@ void lvl7col(sf::Sprite& a)
 }
 
 
-bool enemy_player_contact(sf::Sprite& player, sf::Sprite& enemy)
+bool enemy_player_contact(sf::Sprite& player, sf::Sprite& enemy) // sprawdzanie kontaktu międzi postaciami - Bartosz
 {
     sf::FloatRect a = player.getGlobalBounds();
     sf::FloatRect b = enemy.getGlobalBounds();
@@ -238,7 +243,39 @@ bool enemy_player_contact(sf::Sprite& player, sf::Sprite& enemy)
     return false;
 }
 
-int game(int new_start, const std::wstring& filename = L"")
+void enemy_load(std::vector <std::unique_ptr<Character>> &Enemies, const std::wstring &filename, const character_type *Enemies_type) // załadowanie wrogów - Bartosz
+{
+    std::ifstream file(filename);
+    bool a = true;
+    int values[4];
+    std::string check;
+    while (!file.eof())
+    {
+        if (a)
+            std::getline(file, check);
+        else
+        {
+            for (int i = 0; i < sizeof(values) / sizeof(*values); i++)
+                file >> values[i];
+
+            Enemies.push_back(std::unique_ptr<Character>(new Character(values[3], Enemies_type[values[3]], values[0])));
+            
+            sf::Sprite &last_s = Enemies.back()->sprite;
+            float & last_h = Enemies.back()->Health;
+
+            file >> last_h;
+
+            last_s.setPosition(values[1], values[2]);
+        }
+                
+        if (check.empty())
+            a = false;
+           
+    }
+
+}
+
+int game(int new_start, const std::wstring& filename = L"") // główna funkcja zarządzająca grą - Bartosz
 {
     const int w = 1000, h = 700;
     bool isMoving[4] = { false, false, false, false };
@@ -249,53 +286,59 @@ int game(int new_start, const std::wstring& filename = L"")
 
     srand(time(NULL));
 
-    sf::RenderWindow window(sf::VideoMode(w, h), "Nasza gra 2D");
+    sf::RenderWindow window(sf::VideoMode(w, h), "Nasza gra 2D"); // głowne okno
 
     sf::Font font;
-    font.loadFromFile("Textures/HannoverMesseSans-dewK.ttf");
+    font.loadFromFile("Textures/HannoverMesseSans-dewK.ttf"); // czionka - Bartosz
 
     sf::RectangleShape gui(sf::Vector2f(window.getSize()));
-    gui.setFillColor(sf::Color(0, 0, 0, 255));
+    gui.setFillColor(sf::Color(0, 0, 0, 255)); // tło menu - Bartosz
 
-    const character_type Player_type = { "Textures/main_character.png", 0.17, {0, 0, 460, 560}, 100, 2, 15, 60, 40, 100 };
-    const character_type Enemies_type[6] = { { "Textures/Enemies/Manekin.png", 2, {13 , 6, 31, 52}, 30, 1, 0 }, {"Textures/Enemies/Slime.png", 2, {2, 2, 61, 57}, 50, 2, 10, 80}, { "Textures/Enemies/Kleszcz.png", 2, {25, 2, 45, 64}, 100, 2, 20, 85}, { "Textures/Enemies/Poczwara.png", 2, {19, 3, 28, 31}, 120, 3, 8, 75}, { "Textures/Enemies/Kot.png", 2, {15, 12, 51, 21}, 100, 3, 25, 100 }, { "Textures/Enemies/Nietoperz.png", 2, {9, 17, 44, 43}, 55, 3, 30, 95 } };
-
-    std::vector <std::unique_ptr<Character>> Enemies;
-
-    int struct_types[7] = { 0, 1, 1, 2, 3, 4, 5 };
-
-    for (int i = 0; i < sizeof(struct_types) / sizeof(*struct_types); i++)
-    {
-        Enemies.push_back(std::unique_ptr<Character>(new Character(Enemies_type[struct_types[i]], 5)));
-    }
+    const character_type Player_type = { "Textures/main_character.png", 0.17, {0, 0, 460, 560}, 100, 1, 15, 60, 40, 100 }; // wartości początkowe bohatera - Bartosz
+    const character_type Enemies_type[6] = { { "Textures/Enemies/Manekin.png", 2, {13 , 6, 31, 52}, 30, 1, 0 }, {"Textures/Enemies/Slime.png", 2, {2, 2, 61, 57}, 50, 2, 10, 80}, { "Textures/Enemies/Kleszcz.png", 2, {25, 2, 45, 64}, 100, 2, 20, 85}, { "Textures/Enemies/Poczwara.png", 2, {19, 3, 28, 31}, 120, 3, 8, 75}, { "Textures/Enemies/Kot.png", 2, {15, 12, 51, 21}, 100, 3, 25, 100 }, { "Textures/Enemies/Nietoperz.png", 2, {9, 17, 44, 43}, 55, 3, 30, 95 } }; // wartości początkowe wrogów - Bartosz
 
     int lvli = 0;
 
-    (*Enemies[0]).sprite.setPosition(550, 500);
-    (*Enemies[1]).sprite.setPosition(400, 60);
-    (*Enemies[2]).sprite.setPosition(600, 300);
-    (*Enemies[3]).sprite.setPosition(800, 300);
-    (*Enemies[4]).sprite.setPosition(700, 500);
-    (*Enemies[5]).sprite.setPosition(200, 300);
-    (*Enemies[6]).sprite.setPosition(700, 500);
-    (*Enemies[0]).map_lvl = 3;
-    (*Enemies[5]).map_lvl = 6;
-    (*Enemies[6]).map_lvl = 6;
+    Character Player(-1, Player_type, lvli); // obiekt bohatera - Bartosz
 
-    Character Player(Player_type, lvli);
+    std::vector <std::unique_ptr<Character>> Enemies; // wektor unikalnych wskaźników obiektów wrogów - Bartosz
 
-    if (filename == L"")
-        Player.sprite.setPosition(785, 231);
-    else
+    if (filename == L"") // domyślne ustawienie wartości - Bartosz
     {
-        Player << filename;
-        lvli = Player.map_lvl;
+        Player.sprite.setPosition(785, 231);
+
+        int struct_types[7] = { 0, 1, 1, 2, 3, 4, 5 };
+
+        for (int i = 0; i < sizeof(struct_types) / sizeof(*struct_types); i++)
+        {
+            Enemies.push_back(std::unique_ptr<Character>(new Character(struct_types[i], Enemies_type[struct_types[i]], 5)));
+        }
+
+        (*Enemies[0]).sprite.setPosition(550, 500);
+        (*Enemies[1]).sprite.setPosition(400, 60);
+        (*Enemies[2]).sprite.setPosition(600, 300);
+        (*Enemies[3]).sprite.setPosition(800, 300);
+        (*Enemies[4]).sprite.setPosition(700, 500);
+        (*Enemies[5]).sprite.setPosition(200, 300);
+        (*Enemies[6]).sprite.setPosition(700, 500);
+        (*Enemies[0]).map_lvl = 3;
+        (*Enemies[5]).map_lvl = 6;
+        (*Enemies[6]).map_lvl = 6;
+    }
+        
+    else // wczytywanie z pliku - Bartosz
+    {
+        Player << filename; // wartości bohatera
+        lvli = Player.map_lvl; // aktualny poziom
+
+        enemy_load(Enemies, filename, Enemies_type); // wrogowie
     }
 
-    sf::CircleShape option(20, 3);
+    sf::CircleShape option(20, 3); // trójkąt wyboru - Bartosz
     option.setPosition(100, 100);
     option.rotate(90);
 
+    //Michał
     sf::Texture startmap;
     startmap.loadFromFile("Textures/levels/1lvl.png");
     sf::IntRect rect(0, 0, 228, 181);
@@ -362,16 +405,16 @@ int game(int new_start, const std::wstring& filename = L"")
 
     sf::Clock timer;
 
-    window.setFramerateLimit(60);
+    window.setFramerateLimit(60); // stała liczba klatek
 
     bool nozi = true;
-    while (window.isOpen())
+    while (window.isOpen()) // pętla otwartego okna
     {
-        count = 0;
+        count = 0; // licznik wrogów na poziomie 6 - Bartosz
         window.clear();
-        Event(window, Keys, isMoving, choose, menu_open, menu, stats_open, eq);
+        Event(window, Keys, isMoving, choose, menu_open, menu, stats_open, eq); // uruchamianie funkcji zdarzeń
 
-        switch (lvli)
+        switch (lvli) //Michał
         {
         case 0:
             window.draw(startmapbackground);
@@ -452,7 +495,7 @@ int game(int new_start, const std::wstring& filename = L"")
                 nozi = false;
             }
             lvl4col(Player.sprite);
-            if (new_start && Player.sprite.getPosition().x >= 250)
+            if (new_start && Player.sprite.getPosition().x >= 250) // scenka w bunkrze - Bartosz
             {
                 normal_state = false;
                 window.draw(Player.sprite);
@@ -489,26 +532,27 @@ int game(int new_start, const std::wstring& filename = L"")
             break;
         }
 
-        Player.map_lvl = lvli;
+        Player.map_lvl = lvli; //poziom, na którym jest gracz ma być taki jak aktualnie wyświetlany
 
-        if (menu_open)
+        // obsługa menu, która nie może kolidować z ruchem postaci, bądź sprawdzaniem kolizji z wrogami; pętla za każdym razem sprawdza warunek, żeby okno się nie freezowało - Bartosz
+        if (menu_open) // menu escape
         {
-            escape_menu(window, gui, menu_open, isMoving, choose, option, font, menu, Player);
+            escape_menu(window, gui, menu_open, isMoving, choose, option, font, menu, Player, Enemies);
             normal_state = false;
         }
 
-        else if (stats_open)
+        else if (stats_open) // menu statystyk
         {
             stats_menu(window, Player, gui, isMoving, choose, option, menu, font);
             normal_state = false;
         }
-        else if (eq)
+        else if (eq) //Michał
         {
             ekwipunek(window, Player, gui, isMoving, choose, option, menu, font);
             normal_state = false;
         }
 
-        else
+        else // uruchomienie walki oraz ustawienia z nią związane - Bartosz
         {
             for (int i = 0; i < Enemies.size(); i++)
             {
@@ -521,7 +565,7 @@ int game(int new_start, const std::wstring& filename = L"")
         }
 
 
-        if (Player.Health == 0 and !menu_open)
+        if (Player.Health <= 0 and !menu_open) // informacja o śmierci - Bartosz
         {
             window.draw(gui);
             sf::Text death(L"ŚMIERĆ!", font, 100);
@@ -530,7 +574,7 @@ int game(int new_start, const std::wstring& filename = L"")
             window.draw(death);
         }
 
-        else if (normal_state)
+        else if (normal_state) // jeśli nie jest otwarte żadne menu to usuwani są nieżywi wrogowie z wektora oraz resetowany jest wygląd bohatera, a także nastepuje rysowanie - Bartosz
         {
             Player.sprite.setColor(sf::Color::White);
             for (int i = 0; i < Enemies.size(); i++)
@@ -551,18 +595,18 @@ int game(int new_start, const std::wstring& filename = L"")
             window.draw(Player.sprite);
         }
 
-        if (new_start && new_start < 3)
+        if (new_start && new_start < 3) // nowa gra - Bartosz
             new_game(window, font, new_start);
 
-        if (count < 4 && respawn_timer.getElapsedTime().asSeconds() >= 35)
+        if (count < 4 && respawn_timer.getElapsedTime().asSeconds() >= 35) // reset czasu do nowego wroga - Bartosz
         {
             respawn_timer.restart();
         }
             
-        else if (count < 4 && respawn_timer.getElapsedTime().asSeconds() >= 30)
+        else if (count < 4 && respawn_timer.getElapsedTime().asSeconds() >= 30) // tworzenie wroga na 'arenie' - Bartosz
         {
             int type = rand() % 5 + 1;
-            Enemies.push_back(std::unique_ptr<Character>(new Character(Enemies_type[type], 6)));
+            Enemies.push_back(std::unique_ptr<Character>(new Character(type, Enemies_type[type], 6)));
             sf::Sprite &last = Enemies.back()->sprite;
             while (type)
             {
@@ -578,11 +622,10 @@ int game(int new_start, const std::wstring& filename = L"")
             }
             respawn_timer.restart();
         }
-            
-        
+           
 
-        normal_state = true;
-        window.display();
+        normal_state = true; // ustawienie zwykłego stanu - Bartosz
+        window.display(); // wyświetlanie wszystkiego
 
 
     }
