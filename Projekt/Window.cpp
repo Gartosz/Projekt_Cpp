@@ -677,12 +677,7 @@ int game(int new_start, const std::wstring& filename = L"") // główna funkcja 
                     i--;
                 }
                 else if ((*Enemies[i]).map_lvl == lvli)
-                {
                     window.draw((*Enemies[i]).sprite);
-
-                    if ((*Enemies[i]).map_lvl == 6) // liczenie potworów na 'arenie' - Bartosz
-                        ++count;
-                }
             }
             menu = true;
             Player.player_move(isMoving, timer);
@@ -691,6 +686,11 @@ int game(int new_start, const std::wstring& filename = L"") // główna funkcja 
 
         if (new_start && new_start < 3) // nowa gra - Bartosz
             new_game(window, font, new_start);
+
+
+        for (int i = 0; i < Enemies.size(); ++i)
+            if ((*Enemies[i]).map_lvl == 6) // liczenie potworów na 'arenie' - Bartosz
+                ++count;
 
         if (count < 4 && respawn_timer.getElapsedTime().asSeconds() >= 35) // reset czasu do nowego wroga - Bartosz
         {
