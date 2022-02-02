@@ -2,7 +2,7 @@
 #include "Item.h"
 
 
-item::item(float xp,float yp,float heightt,float widthh,std::string txt_path,float scalee)
+item::item(float xp, float yp, float heightt, float widthh, std::string txt_path, float scalee)
 {
 	rect.left = xp;
 	rect.top = yp;
@@ -15,6 +15,6 @@ item::item(float xp,float yp,float heightt,float widthh,std::string txt_path,flo
 	sprite.setTexture(txt);
 	sprite.setTextureRect(rect);
 	sprite.setScale(scalee, scalee);
-	
-	
+
+
 }

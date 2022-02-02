@@ -119,7 +119,7 @@ int main()
 			case strzalka_up:
 				l[j] = 0;
 				if (j == 0)
-					j = paths.size() - 1;			
+					j = paths.size() - 1;
 				else
 					j--;
 				l[j] = 33;
@@ -143,9 +143,9 @@ int main()
 			}
 
 		}
-		
+
 		filename = L"./Saves/" + paths[co] + L".txt";
-		
+
 		game(0, filename);
 		break;
 	}

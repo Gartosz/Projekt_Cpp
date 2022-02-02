@@ -77,12 +77,12 @@ int new_game(sf::RenderWindow& window, const sf::Font& font, int& start_value) /
 }
 
 // scenka w bunkrze - Bartosz
-void bunker(sf::RenderWindow& window, sf::Font const& font, int& start_value, const sf::Sprite &map)
+void bunker(sf::RenderWindow& window, sf::Font const& font, int& start_value, const sf::Sprite& map)
 {
     static int i = 0, j = 0;
     static sf::RectangleShape fade(sf::Vector2f(window.getSize())), fade2(sf::Vector2f(window.getSize()));
     static sf::Text text;
-    const std::wstring strings[11] = { L"Uda³o ci siê dotrzeæ do bunkra na czas." , L"W œrodku widzisz tylko spore zapasy jedzenia, wody\ni innych potrzebnych do przetrwania rzeczy.", L"Po chwili s³ychaæ wybuch.", L"Przypomina Ci siê, ¿e wczoraj Twoja rodzina\nwyjecha³a na kilka dni.", L"Nie wiesz czy j¹ jeszcze kiedyœ zobaczysz.", L"Starasz siê uspokoiæ myœl¹, ¿e wszystko sie jakoœ u³o¿y...", L" ", L"Po kilku tygodniach spêdzonych samotnie kilkanaœcie metrów\npod ziemi¹, postanawiasz wyjœæ na powierzchniê...", L"Gdy to zrobi³eœ by³eœ w szoku widz¹c to,\njak zmieni³o siê otoczenie.", L"Mijaj¹ kolejne miesi¹ce, po których\npostanawiasz wydostaæ siê z miasta"};
+    const std::wstring strings[11] = { L"Uda³o ci siê dotrzeæ do bunkra na czas." , L"W œrodku widzisz tylko spore zapasy jedzenia, wody\ni innych potrzebnych do przetrwania rzeczy.", L"Po chwili s³ychaæ wybuch.", L"Przypomina Ci siê, ¿e wczoraj Twoja rodzina\nwyjecha³a na kilka dni.", L"Nie wiesz czy j¹ jeszcze kiedyœ zobaczysz.", L"Starasz siê uspokoiæ myœl¹, ¿e wszystko sie jakoœ u³o¿y...", L" ", L"Po kilku tygodniach spêdzonych samotnie kilkanaœcie metrów\npod ziemi¹, postanawiasz wyjœæ na powierzchniê...", L"Gdy to zrobi³eœ by³eœ w szoku widz¹c to,\njak zmieni³o siê otoczenie.", L"Mijaj¹ kolejne miesi¹ce, po których\npostanawiasz wydostaæ siê z miasta" };
     static sf::Clock timer, wait;
     const int time_stamp = 40;
 
@@ -113,7 +113,7 @@ void bunker(sf::RenderWindow& window, sf::Font const& font, int& start_value, co
     if (i > 255)
     {
         // tekst zmieniaj¹cy siê o jeden znak
-        if (start_value <5 && j < strings[i - 256].length() && wait.getElapsedTime().asMilliseconds() >= time_stamp && j <= strings[i - 256].length())
+        if (start_value < 5 && j < strings[i - 256].length() && wait.getElapsedTime().asMilliseconds() >= time_stamp && j <= strings[i - 256].length())
         {
             ++j;
             text.setString(strings[i - 256].substr(0, j));
@@ -143,9 +143,9 @@ void bunker(sf::RenderWindow& window, sf::Font const& font, int& start_value, co
         else if (start_value == 7 && timer.getElapsedTime().asMilliseconds() >= 5 && j > 0) // œciemnianie siê mapy
         {
             --j;
-            if( j < 255 - 100)
+            if (j < 255 - 100)
                 fade2.setFillColor(sf::Color(j, j, j, 255 - j));
-            else 
+            else
                 fade2.setFillColor(sf::Color(j, j, j, 100));
             timer.restart();
         }
@@ -172,7 +172,7 @@ void bunker(sf::RenderWindow& window, sf::Font const& font, int& start_value, co
 
 
         }
-        
+
     }
 
     else if (start_value == 8) // rozjaœnianie obrazu
@@ -187,6 +187,10 @@ void bunker(sf::RenderWindow& window, sf::Font const& font, int& start_value, co
             start_value = 0;
     }
 
-    
+
+
+}
+void end(sf::RenderWindow& window, sf::Font const& font, int& start_value, const sf::Sprite& map)
+{
 
 }

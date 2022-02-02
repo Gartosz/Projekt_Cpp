@@ -137,7 +137,7 @@ void lvl2col(sf::Sprite& a)
     //kolizja gornej sciany
     if (a.getPosition().y < 267)a.setPosition(a.getPosition().x, 267);
     //kolizja dolnej sciany
-    if (a.getPosition().y > 516) { a.setPosition(a.getPosition().x, 516); std::cout << "to ja"; }
+    if (a.getPosition().y > 516)a.setPosition(a.getPosition().x, 516);
     //kolizja lewej sciany
     if (a.getPosition().x < 0)a.setPosition(0, a.getPosition().y);
     //kolizja prawej sciany
@@ -227,7 +227,29 @@ void lvl7col(sf::Sprite& a)
     //kolizja prawej sciany
     if (a.getPosition().x > 920)a.setPosition(920, a.getPosition().y);
 }
-
+void lvl8col(sf::Sprite& a)
+{
+    //kolizja gornej sciany
+    if (a.getPosition().y < 0)a.setPosition(a.getPosition().x, 0);
+    //kolizja dolnej sciany
+    if (a.getPosition().y > 603)a.setPosition(a.getPosition().x, 603);
+    //kolizja lewej sciany
+    if (a.getPosition().x < 0)a.setPosition(0, a.getPosition().y);
+    //kolizja prawej sciany
+    if (a.getPosition().x > 920)a.setPosition(920, a.getPosition().y);
+}
+void lvl9col(sf::Sprite& a)
+{
+    //kolizja gornej sciany
+    if (a.getPosition().y < 309)a.setPosition(a.getPosition().x, 309);
+    //kolizja dolnej sciany
+    if (a.getPosition().y > 420)a.setPosition(a.getPosition().x, 420);
+    //kolizja lewej sciany
+    if (a.getPosition().x < 0)a.setPosition(0, a.getPosition().y);
+    //kolizja prawej sciany
+    if (a.getPosition().x > 940)a.setPosition(940, a.getPosition().y);
+    //kolizja z drabina
+}
 
 bool enemy_player_contact(sf::Sprite& player, sf::Sprite& enemy) // sprawdzanie kontaktu międzi postaciami - Bartosz
 {
@@ -243,7 +265,7 @@ bool enemy_player_contact(sf::Sprite& player, sf::Sprite& enemy) // sprawdzanie 
     return false;
 }
 
-void enemy_load(std::vector <std::unique_ptr<Character>> &Enemies, const std::wstring &filename, const character_type *Enemies_type) // załadowanie wrogów - Bartosz
+void enemy_load(std::vector <std::unique_ptr<Character>>& Enemies, const std::wstring& filename, const character_type* Enemies_type) // załadowanie wrogów - Bartosz
 {
     std::ifstream file(filename);
     bool a = true;
@@ -259,18 +281,18 @@ void enemy_load(std::vector <std::unique_ptr<Character>> &Enemies, const std::ws
                 file >> values[i];
 
             Enemies.push_back(std::unique_ptr<Character>(new Character(values[3], Enemies_type[values[3]], values[0])));
-            
-            sf::Sprite &last_s = Enemies.back()->sprite;
-            float & last_h = Enemies.back()->Health;
+
+            sf::Sprite& last_s = Enemies.back()->sprite;
+            float& last_h = Enemies.back()->Health;
 
             file >> last_h;
 
             last_s.setPosition(values[1], values[2]);
         }
-                
+
         if (check.empty())
             a = false;
-           
+
     }
 
 }
@@ -325,7 +347,7 @@ int game(int new_start, const std::wstring& filename = L"") // główna funkcja 
         (*Enemies[5]).map_lvl = 6;
         (*Enemies[6]).map_lvl = 6;
     }
-        
+
     else // wczytywanie z pliku - Bartosz
     {
         Player << filename; // wartości bohatera
@@ -338,7 +360,7 @@ int game(int new_start, const std::wstring& filename = L"") // główna funkcja 
     option.setPosition(100, 100);
     option.rotate(90);
 
-    //Michał
+    //Michał - importowanie map oraz itemów
     sf::Texture startmap;
     startmap.loadFromFile("Textures/levels/1lvl.png");
     sf::IntRect rect(0, 0, 228, 181);
@@ -381,6 +403,18 @@ int game(int new_start, const std::wstring& filename = L"") // główna funkcja 
     sf::Sprite lvl7(txt7, rect7);
     lvl7.scale(w / 228.0, h / 181.0);
 
+    sf::Texture txt8;
+    txt8.loadFromFile("Textures/levels/8lvl.png");
+    sf::IntRect rect8(0, 0, 228, 181);
+    sf::Sprite lvl8(txt8, rect8);
+    lvl8.scale(w / 228.0, h / 181.0);
+
+    sf::Texture txt9;
+    txt9.loadFromFile("Textures/levels/9lvl.png");
+    sf::IntRect rect9(0, 0, 240, 131);
+    sf::Sprite lvl9(txt9, rect9);
+    lvl9.scale(w / 240.0, h / 131.0);
+
     sf::Texture txti1;
     txti1.loadFromFile("Textures/items/Apteczka_d.png");
     sf::IntRect recti1(5, 2, 155, 157);
@@ -402,19 +436,20 @@ int game(int new_start, const std::wstring& filename = L"") // główna funkcja 
         jablko.push_back(std::unique_ptr<item>(new item(22, 19, 27, 21, "Textures/items/jablko.png", 1.5)));
     }
     item noz = item(22, 19, 27, 21, "Textures/items/noz.png", 1.5);
+    item maska = item(0, 0, 28, 23, "Textures/items/Maska.png", 1.5);
 
     sf::Clock timer;
 
     window.setFramerateLimit(60); // stała liczba klatek
-
+    bool winn = false;
     bool nozi = true;
+    bool maskai = true;
     while (window.isOpen()) // pętla otwartego okna
     {
         count = 0; // licznik wrogów na poziomie 6 - Bartosz
         window.clear();
         Event(window, Keys, isMoving, choose, menu_open, menu, stats_open, eq); // uruchamianie funkcji zdarzeń
-
-        switch (lvli) //Michał
+        switch (lvli) //Michał - poruszanie sie po poziomach oraz tworzenie obiektów na nich
         {
         case 0:
             window.draw(startmapbackground);
@@ -516,8 +551,18 @@ int game(int new_start, const std::wstring& filename = L"") // główna funkcja 
             window.draw(lvl6);
             if (Player.sprite.getPosition().x > 539 && Player.sprite.getPosition().x < 677 && Player.sprite.getPosition().y < 5 && sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
             {
-                lvli++;
-                Player.sprite.setPosition(459, 591);
+                lvli=6;
+                Player.sprite.setPosition(0, 591);
+            }
+            if (Player.sprite.getPosition().x > 795 && Player.sprite.getPosition().x < 840 && Player.sprite.getPosition().y > 594 && sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+            {
+                lvli = 7;
+                Player.sprite.setPosition(459, 7);
+            }
+            if (Player.sprite.getPosition().y > 237 && Player.sprite.getPosition().y <297  && Player.sprite.getPosition().x > 908 && sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && Player.toxic_immune == true)
+            {
+                Player.sprite.setPosition(10, 603);
+                lvli = 8;
             }
             lvl6col(Player.sprite);
             break;
@@ -526,10 +571,49 @@ int game(int new_start, const std::wstring& filename = L"") // główna funkcja 
             if (Player.sprite.getPosition().y > 601 && sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
             {
                 lvli--;
-                Player.sprite.setPosition(600, 3);
+                Player.sprite.setPosition(600, 7);
             }
             lvl7col(Player.sprite);
             break;
+        case 7:
+            window.draw(lvl8);
+            if (Player.sprite.getPosition().y < 3 && sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+            {
+                lvli=lvli-2;
+                Player.sprite.setPosition(819,562);
+            }
+            if (maskai)
+            {
+                maska.sprite.setPosition(483, 327);
+                window.draw(maska.sprite);
+            }
+            if (enemy_player_contact(Player.sprite, maska.sprite) && sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+            {
+                Player.items_v[6] += 1;
+                maska.sprite.setPosition(-100, -100);
+                maskai = false;
+            }
+            lvl8col(Player.sprite);
+            break;
+        case 8:
+            Player.sprite.setPosition(10, 400);
+            if (Player.sprite.getPosition().x > 939 )
+            {   
+                lvli=9;
+            }
+            window.draw(lvl9);
+            lvl9col(Player.sprite);
+            
+        case 9:
+            Player.sprite.setPosition(-100, -100);
+            window.draw(gui);
+            sf::Text win(L"WYGRAŁEŚ!", font, 100);
+            win.setFillColor(sf::Color::Green);
+            win.setPosition(w / 2 - win.getGlobalBounds().width / 2, h / 2 - win.getGlobalBounds().height / 2);
+            window.draw(win);
+
+            break;
+
         }
 
         Player.map_lvl = lvli; //poziom, na którym jest gracz ma być taki jak aktualnie wyświetlany
@@ -546,7 +630,7 @@ int game(int new_start, const std::wstring& filename = L"") // główna funkcja 
             stats_menu(window, Player, gui, isMoving, choose, option, menu, font);
             normal_state = false;
         }
-        else if (eq) //Michał
+        else if (eq) //Michał-ekwipunek podczas walki
         {
             ekwipunek(window, Player, gui, isMoving, choose, option, menu, font);
             normal_state = false;
@@ -602,27 +686,27 @@ int game(int new_start, const std::wstring& filename = L"") // główna funkcja 
         {
             respawn_timer.restart();
         }
-            
+
         else if (count < 4 && respawn_timer.getElapsedTime().asSeconds() >= 30) // tworzenie wroga na 'arenie' - Bartosz
         {
             int type = rand() % 5 + 1;
             Enemies.push_back(std::unique_ptr<Character>(new Character(type, Enemies_type[type], 6)));
-            sf::Sprite &last = Enemies.back()->sprite;
+            sf::Sprite& last = Enemies.back()->sprite;
             while (type)
             {
                 last.setPosition(rand() % (w - int(std::floor(last.getGlobalBounds().width))), rand() % (h - int(std::floor(last.getGlobalBounds().height))));
                 for (int i = 0; i < Enemies.size() - 1; i++)
                 {
-                    if((*Enemies[i]).map_lvl == 6 && enemy_player_contact((*Enemies[i]).sprite, last))
+                    if ((*Enemies[i]).map_lvl == 6 && enemy_player_contact((*Enemies[i]).sprite, last))
                         break;
                     if (i == Enemies.size() - 2)
                         type = 0;
                 }
-                    
+
             }
             respawn_timer.restart();
         }
-           
+
 
         normal_state = true; // ustawienie zwykłego stanu - Bartosz
         window.display(); // wyświetlanie wszystkiego

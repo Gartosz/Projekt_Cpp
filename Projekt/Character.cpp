@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include "Character.h"
 
-Character::Character(const int &type, const character_type& values, const int& map_lvl) // konstruktor klasy - Bartosz
+Character::Character(const int& type, const character_type& values, const int& map_lvl) // konstruktor klasy - Bartosz
 {
     this->type = type;
     rect.left = values.size[0];
