@@ -29,9 +29,9 @@ public:
         int experience = 0;
     };
     Stats stats;
-    std::string items_n[7] = { "Mala apteczka","Duza apteczka","Jablko","Pistolet","Butelka","Noz","Maska"}; // Micha³ klasyfikacja itemów
-    int items_v[7] = { 2,0,3,1,0,0,0 }; // Micha³ tablica przechowujaca ilosc itemów
-    bool toxic_immune = false;//Micha³
+    std::string items_n[7] = { "Mala apteczka","Duza apteczka","Jablko","Pistolet","Butelka","Noz","Maska"}; // MichaÂ³ klasyfikacja itemÃ³w
+    int items_v[7] = { 22,30,3,1,0,0,0 }; // MichaÂ³ tablica przechowujaca ilosc itemÃ³w
+    bool toxic_immune = false;//MichaÂ³
     Character(const int& type, const character_type& values, const int& map_lvl);
     void player_move(bool* isMoving, sf::Clock& timer);
 
@@ -40,21 +40,21 @@ private:
     sf::IntRect rect;
     void move(sf::Clock& timer, double const& speed_h, double const& speed_v, const int& top, const int& height);
 
-    friend std::ostream& operator<<(std::ostream& os, Character const& x) { // wartoœci g³ownego bohatera zwracane podczas zapisu - Bartosz
+    friend std::ostream& operator<<(std::ostream& os, Character const& x) { // wartoÅ“ci gÂ³ownego bohatera zwracane podczas zapisu - Bartosz
         os << x.map_lvl << " " << x.sprite.getPosition().x << " " << x.sprite.getPosition().y << "\n";
         os << x.Health << "\n" << x.stats.experience << "\n";
         os << x.stats.max_health << " " << x.stats.attack << " " << x.stats.accuracy << " " << x.stats.intelligence << "\n";
         for (int i = 0; i < sizeof(x.stats.lvl) / sizeof(*x.stats.lvl); i++)
             os << x.stats.lvl[i] << " ";
         os << "\n";
-        //zapis eq-Micha³
+        //zapis eq-MichaÂ³
         for (int i = 0; i < sizeof(x.items_v) / sizeof(*x.items_v); i++)
             os << x.items_v[i] << " ";
         os << "\n\n";
         return os;
     }
 
-    friend Character& operator<<(Character& x, const std::wstring& filename) { // wartoœci g³ównego bohatera ustawiane podczas wczytywania - Bartosz
+    friend Character& operator<<(Character& x, const std::wstring& filename) { // wartoÅ“ci gÂ³Ã³wnego bohatera ustawiane podczas wczytywania - Bartosz
 
         std::ifstream file(filename);
         int values[20];
@@ -71,7 +71,7 @@ private:
         x.stats.attack = values[6];
         x.stats.accuracy = values[7];
         x.stats.intelligence = values[8];
-        //zapis eq - Micha³
+        //zapis eq - MichaÂ³
         for (int i = 0; i < sizeof(x.items_v) / sizeof(*x.items_v); i++)
             x.items_v[i] = values[13 + i];
         return x;
