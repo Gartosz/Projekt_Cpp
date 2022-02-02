@@ -268,31 +268,38 @@ bool enemy_player_contact(sf::Sprite& player, sf::Sprite& enemy) // sprawdzanie 
 void enemy_load(std::vector <std::unique_ptr<Character>>& Enemies, const std::wstring& filename, const character_type* Enemies_type) // załadowanie wrogów - Bartosz
 {
     std::ifstream file(filename);
-    bool a = true;
+    bool a = false;
     int values[4];
     std::string check;
     while (!file.eof())
     {
+        std::streampos oldpos = file.tellg();
+
+        std::getline(file, check);
+
         if (a)
-            std::getline(file, check);
-        else
         {
+            if (check.empty()) // zapobieganie wczytania ostatniej 'pustej' linii
+                continue;
+
+            file.seekg(oldpos);
             for (int i = 0; i < sizeof(values) / sizeof(*values); i++)
                 file >> values[i];
 
-            Enemies.push_back(std::unique_ptr<Character>(new Character(values[3], Enemies_type[values[3]], values[0])));
+            Enemies.push_back(std::unique_ptr<Character>(new Character(values[3], Enemies_type[values[3]], values[0]))); // nowy element w wektorze
 
             sf::Sprite& last_s = Enemies.back()->sprite;
+
+            last_s = Enemies.back()->sprite;
             float& last_h = Enemies.back()->Health;
 
-            file >> last_h;
+            file >> last_h; // życie
 
-            last_s.setPosition(values[1], values[2]);
+            last_s.setPosition(values[1], values[2]); // pozycja
         }
 
         if (check.empty())
-            a = false;
-
+            a = true;
     }
 
 }
@@ -317,7 +324,7 @@ int game(int new_start, const std::wstring& filename = L"") // główna funkcja 
     gui.setFillColor(sf::Color(0, 0, 0, 255)); // tło menu - Bartosz
 
     const character_type Player_type = { "Textures/main_character.png", 0.17, {0, 0, 460, 560}, 100, 1, 15, 60, 40, 100 }; // wartości początkowe bohatera - Bartosz
-    const character_type Enemies_type[6] = { { "Textures/Enemies/Manekin.png", 2, {13 , 6, 31, 52}, 30, 1, 0 }, {"Textures/Enemies/Slime.png", 2, {2, 2, 61, 57}, 50, 2, 10, 80}, { "Textures/Enemies/Kleszcz.png", 2, {25, 2, 45, 64}, 100, 2, 20, 85}, { "Textures/Enemies/Poczwara.png", 2, {19, 3, 28, 31}, 120, 3, 8, 75}, { "Textures/Enemies/Kot.png", 2, {15, 12, 51, 21}, 100, 3, 25, 100 }, { "Textures/Enemies/Nietoperz.png", 2, {9, 17, 44, 43}, 55, 3, 30, 95 } }; // wartości początkowe wrogów - Bartosz
+    const character_type Enemies_type[6] = { { "Textures/Enemies/Manekin.png", 2, {13 , 6, 31, 52}, 30, 1, 0 }, {"Textures/Enemies/Slime.png", 2, {2, 2, 61, 57}, 50, 2, 10, 80}, { "Textures/Enemies/Kleszcz.png", 2, {25, 2, 45, 64}, 100, 2, 20, 85}, { "Textures/Enemies/Poczwara.png", 2.5, {19, 3, 28, 31}, 120, 3, 8, 75}, { "Textures/Enemies/Kot.png", 2, {15, 12, 51, 21}, 100, 3, 25, 100 }, { "Textures/Enemies/Nietoperz.png", 2, {9, 17, 44, 43}, 55, 3, 30, 95 } }; // wartości początkowe wrogów - Bartosz
 
     int lvli = 0;
 
@@ -661,18 +668,21 @@ int game(int new_start, const std::wstring& filename = L"") // główna funkcja 
         else if (normal_state) // jeśli nie jest otwarte żadne menu to usuwani są nieżywi wrogowie z wektora oraz resetowany jest wygląd bohatera, a także nastepuje rysowanie - Bartosz
         {
             Player.sprite.setColor(sf::Color::White);
-            for (int i = 0; i < Enemies.size(); i++)
+            for (int i = 0; i < Enemies.size(); ++i)
             {
-                if ((*Enemies[i]).Health == 0)
+                if ((*Enemies[i]).Health == 0) // usuwanie wrogów z wektora - Bartosz
                 {
                     Player.stats.experience += (*Enemies[i]).stats.experience;
                     Enemies.erase(Enemies.begin() + i);
                     i--;
                 }
                 else if ((*Enemies[i]).map_lvl == lvli)
+                {
                     window.draw((*Enemies[i]).sprite);
-                if (i >= 0 && (*Enemies[i]).map_lvl == 6)
-                    count++;
+
+                    if ((*Enemies[i]).map_lvl == 6) // liczenie potworów na 'arenie' - Bartosz
+                        ++count;
+                }
             }
             menu = true;
             Player.player_move(isMoving, timer);
