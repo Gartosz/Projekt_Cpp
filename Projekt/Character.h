@@ -71,6 +71,10 @@ private:
         x.stats.attack = values[6];
         x.stats.accuracy = values[7];
         x.stats.intelligence = values[8];
+
+        for (int i = 0; i < 4; i++)
+            x.stats.lvl[i] = values[i + 9];
+
         //zapis eq - Micha³
         for (int i = 0; i < sizeof(x.items_v) / sizeof(*x.items_v); i++)
             x.items_v[i] = values[13 + i];

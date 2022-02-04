@@ -460,33 +460,34 @@ int game(int new_start, const std::wstring& filename = L"") // główna funkcja 
         {
         case 0:
             window.draw(startmapbackground);
+            startmapcol(Player.sprite);            
             if (Player.sprite.getPosition().x > 344 && Player.sprite.getPosition().x < 419 && Player.sprite.getPosition().y >178 && sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
             {
                 lvli++;
                 Player.sprite.setPosition(0, 402);
             }
-            startmapcol(Player.sprite);
             break;
 
         case 1:
             window.draw(lvl2);
+            lvl2col(Player.sprite);
             if (Player.sprite.getPosition().x > 842 && Player.sprite.getPosition().y > 327 && Player.sprite.getPosition().y < 432 && sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
             {
                 lvli++;
                 Player.sprite.setPosition(0, 402);
-            }
-            lvl2col(Player.sprite);
+            }                     
             break;
         case 2:
             window.draw(lvl3);
+            lvl3col(Player.sprite);
             if (Player.sprite.getPosition().x > 936 && sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
             {
                 lvli++;
                 Player.sprite.setPosition(0, 402);
-            }
-            lvl3col(Player.sprite);
+            }     
             break;
-        case 3:
+        case 3: 
+            lvl4col(Player.sprite);
             window.draw(lvl4);
             if (Player.sprite.getPosition().x > 900 && Player.sprite.getPosition().y > 375 && Player.sprite.getPosition().y < 490 && sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
             {
@@ -536,7 +537,7 @@ int game(int new_start, const std::wstring& filename = L"") // główna funkcja 
                 noz.sprite.setPosition(-100, -100);
                 nozi = false;
             }
-            lvl4col(Player.sprite);
+            
             if (new_start && Player.sprite.getPosition().x >= 250) // scenka w bunkrze - Bartosz
             {
                 normal_state = false;
@@ -544,18 +545,20 @@ int game(int new_start, const std::wstring& filename = L"") // główna funkcja 
                 window.draw((*Enemies[0]).sprite);
                 bunker(window, font, new_start, lvl6);
             }
+            
             break;
         case 4:
             window.draw(lvl5);
+            lvl5col(Player.sprite);         
             if (Player.sprite.getPosition().x > 880 && sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
             {
                 lvli++;
                 Player.sprite.setPosition(9, 279);
             }
-            lvl5col(Player.sprite);
             break;
         case 5:
             window.draw(lvl6);
+            lvl6col(Player.sprite);
             if (Player.sprite.getPosition().x > 539 && Player.sprite.getPosition().x < 677 && Player.sprite.getPosition().y < 5 && sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
             {
                 lvli=6;
@@ -571,19 +574,19 @@ int game(int new_start, const std::wstring& filename = L"") // główna funkcja 
                 Player.sprite.setPosition(10, 603);
                 lvli = 8;
             }
-            lvl6col(Player.sprite);
             break;
         case 6:
             window.draw(lvl7);
+            lvl7col(Player.sprite);
             if (Player.sprite.getPosition().y > 601 && sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
             {
                 lvli--;
                 Player.sprite.setPosition(600, 7);
-            }
-            lvl7col(Player.sprite);
+            }      
             break;
         case 7:
             window.draw(lvl8);
+            lvl8col(Player.sprite);
             if (Player.sprite.getPosition().y < 3 && sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
             {
                 lvli=lvli-2;
@@ -600,16 +603,16 @@ int game(int new_start, const std::wstring& filename = L"") // główna funkcja 
                 maska.sprite.setPosition(-100, -100);
                 maskai = false;
             }
-            lvl8col(Player.sprite);
             break;
         case 8:
-            Player.sprite.setPosition(10, 400);
+            window.draw(lvl9);
+            lvl9col(Player.sprite);
             if (Player.sprite.getPosition().x > 939 )
             {   
                 lvli=9;
-            }
-            window.draw(lvl9);
-            lvl9col(Player.sprite);
+                Player.sprite.setPosition(10, 400);
+            }         
+            break;
             
         case 9:
             Player.sprite.setPosition(-100, -100);
@@ -692,12 +695,12 @@ int game(int new_start, const std::wstring& filename = L"") // główna funkcja 
             if ((*Enemies[i]).map_lvl == 6) // liczenie potworów na 'arenie' - Bartosz
                 ++count;
 
-        if (count < 4 && respawn_timer.getElapsedTime().asSeconds() >= 35) // reset czasu do nowego wroga - Bartosz
+        if (count < 4 && respawn_timer.getElapsedTime().asSeconds() >= 25) // reset czasu do nowego wroga - Bartosz
         {
             respawn_timer.restart();
         }
 
-        else if (count < 4 && respawn_timer.getElapsedTime().asSeconds() >= 30) // tworzenie wroga na 'arenie' - Bartosz
+        else if (count < 4 && respawn_timer.getElapsedTime().asSeconds() >= 20) // tworzenie wroga na 'arenie' - Bartosz
         {
             int type = rand() % 5 + 1;
             Enemies.push_back(std::unique_ptr<Character>(new Character(type, Enemies_type[type], 6)));
@@ -705,22 +708,25 @@ int game(int new_start, const std::wstring& filename = L"") // główna funkcja 
             while (type)
             {
                 last.setPosition(rand() % (w - int(std::floor(last.getGlobalBounds().width))), rand() % (h - int(std::floor(last.getGlobalBounds().height))));
-                for (int i = 0; i < Enemies.size() - 1; i++)
+                if (count != 0)
                 {
-                    if ((*Enemies[i]).map_lvl == 6 && enemy_player_contact((*Enemies[i]).sprite, last))
-                        break;
-                    if (i == Enemies.size() - 2)
-                        type = 0;
+                    for (int i = 0; i < Enemies.size() - 1; i++)
+                    {
+                        if ((*Enemies[i]).map_lvl == 6 && enemy_player_contact((*Enemies[i]).sprite, last))
+                            break;
+                        if (i == Enemies.size() - 2)
+                            type = 0;
+                    }
                 }
+                else
+                    break;
 
             }
             respawn_timer.restart();
         }
 
-
         normal_state = true; // ustawienie zwykłego stanu - Bartosz
         window.display(); // wyświetlanie wszystkiego
-
 
     }
     return 0;

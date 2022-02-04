@@ -15,18 +15,18 @@ C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(405,36): warning C4305: "argument"
 C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(411,36): warning C4305: "argument": obcięcie z "double" do "float"
 C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(417,36): warning C4305: "argument": obcięcie z "double" do "float"
 C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(423,36): warning C4305: "argument": obcięcie z "double" do "float"
-C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(496,31): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(506,31): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(517,31): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(648,31): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(671,31): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(691,27): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(707,103): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
-C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(707,41): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
-C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(708,35): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(497,31): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(507,31): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(518,31): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(651,31): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(674,31): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(694,27): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(710,103): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(710,41): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+C:\Projekt C++\Projekt_Cpp\Projekt\Window.cpp(713,39): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
   Trwa generowanie kodu
   1 of 1049 functions (<0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    4 functions had inline decision re-evaluated but remain unchanged
+    3 functions had inline decision re-evaluated but remain unchanged
   Zakończono generowanie kodu
   Projekt C++.vcxproj -> C:\Projekt C++\Projekt_Cpp\Projekt\Release\Projekt C++.exe
